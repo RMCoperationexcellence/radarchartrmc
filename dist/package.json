@@ -1,0 +1,17 @@
+{
+		"version": "3.0",
+		"author": {"name":"chaianan kongsomlarp","email":"0150_chaianan_k@scg.com"},
+		"resources": [
+			{
+				"resourceId": "rId0",
+				"sourceType": 5,
+				"file": "resources/rmcopD9601471EF204F488B44E6CC785CA919.pbiviz.json"
+			}
+		],
+		"visual": {"name":"rmcop","displayName":"rmcop","guid":"rmcopD9601471EF204F488B44E6CC785CA919","visualClassName":"Visual","version":"3.0","description":"still on developing new visual for rmc-op dashboard","supportUrl":"rop.scg.com","gitHubUrl":""},
+		"metadata": {
+			"pbivizjson": {
+				"resourceId": "rId0"
+			}
+		}
+	}
