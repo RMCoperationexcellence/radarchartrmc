@@ -24,6 +24,21 @@
             "displayName": "Main course check",
             "name": "maincategory",
             "kind": "Measure"
+        },
+        {
+            "displayName": "Position ID",
+            "name": "positionid",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Course ID",
+            "name": "courseid",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "CoursegroupID",
+            "name": "coursegroupid",
+            "kind": "Measure"
         }
     ],
     "objects": {
@@ -98,6 +113,21 @@
                         {
                             "bind": {
                                 "to": "maincategory"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "positionid"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "courseid"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "coursegroupid"
                             }
                         }
                     ]

@@ -9,7 +9,7 @@ var rmcopD9601471EF204F488B44E6CC785CA919_DEBUG: IVisualPlugin = {
     name: 'rmcopD9601471EF204F488B44E6CC785CA919_DEBUG',
     displayName: 'rmcop',
     class: 'Visual',
-    apiVersion: '5.1.0',
+    apiVersion: '5.4.0',
     create: (options?: VisualConstructorOptions) => {
         if (Visual) {
             return new Visual(options);

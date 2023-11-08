@@ -3,290 +3,6 @@ var rmcopD9601471EF204F488B44E6CC785CA919_DEBUG;
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 429:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   E: () => (/* binding */ VisualFormattingSettingsModel)
-/* harmony export */ });
-/* harmony import */ var powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(84);
-/*
- *  Power BI Visualizations
- *
- *  Copyright (c) Microsoft Corporation
- *  All rights reserved.
- *  MIT License
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the ""Software""), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-
-var FormattingSettingsCard = powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .Card */ .Zb;
-var FormattingSettingsModel = powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .Model */ .Hn;
-/**
- * Data Point Formatting Card
- */
-class DataPointCardSettings extends FormattingSettingsCard {
-    constructor() {
-        super(...arguments);
-        this.defaultColor = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ColorPicker */ .zH({
-            name: "defaultColor",
-            displayName: "Default color",
-            value: { value: "" }
-        });
-        this.showAllDataPoints = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ToggleSwitch */ .Zh({
-            name: "showAllDataPoints",
-            displayName: "Show all",
-            value: true
-        });
-        this.fill = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ColorPicker */ .zH({
-            name: "fill",
-            displayName: "Fill",
-            value: { value: "" }
-        });
-        this.fillRule = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ColorPicker */ .zH({
-            name: "fillRule",
-            displayName: "Color saturation",
-            value: { value: "" }
-        });
-        this.fontSize = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .NumUpDown */ .L_({
-            name: "fontSize",
-            displayName: "Text Size",
-            value: 12
-        });
-        this.name = "dataPoint";
-        this.displayName = "Data colors";
-        this.slices = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
-    }
-}
-/**
-* visual settings model class
-*
-*/
-class VisualFormattingSettingsModel extends FormattingSettingsModel {
-    constructor() {
-        super(...arguments);
-        // Create formatting settings model formatting cards
-        this.dataPointCard = new DataPointCardSettings();
-        this.cards = [this.dataPointCard];
-    }
-}
-
-
-/***/ }),
-
-/***/ 970:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   u: () => (/* binding */ Visual)
-/* harmony export */ });
-/* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(85);
-/* harmony import */ var chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(28);
-/* harmony import */ var powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(261);
-/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(429);
-
-
-
-
-
-
-class Visual {
-    constructor(options) {
-        console.log('Visual constructor', options);
-        this.formattingSettingsService = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
-        this.target = options.element;
-        this.updateCount = 0;
-        if (document) {
-            const new_p = document.createElement("p");
-            new_p.appendChild(document.createTextNode("Update count:"));
-            const new_em = document.createElement("em");
-            this.textNode = document.createTextNode(this.updateCount.toString());
-            new_em.appendChild(this.textNode);
-            new_p.appendChild(new_em);
-            this.target.appendChild(new_p);
-        }
-    }
-    update(options) {
-        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(_settings__WEBPACK_IMPORTED_MODULE_2__/* .VisualFormattingSettingsModel */ .E, options.dataViews);
-        if (this.textNode) {
-            this.textNode.textContent = (this.updateCount++).toString();
-        }
-        this.target.innerHTML = '';
-        this.target.style.display = 'flex';
-        this.target.style.justifyContent = 'center';
-        this.target.style.alignItems = 'center';
-        const canvas = document.createElement('canvas');
-        canvas.width = options.viewport.width;
-        canvas.height = options.viewport.height;
-        this.target.appendChild(canvas);
-        const dataView = options.dataViews[0];
-        const data = this.convertDataView(dataView, options);
-        console.log("data converted", data);
-        const ctx = canvas.getContext('2d');
-        if (this.chart) {
-            this.chart.destroy();
-        }
-        chart_js_auto__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .ZP.register(chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z);
-        this.chart = new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .ZP(ctx, {
-            type: 'radar',
-            data: {
-                labels: data.map(d => d.category),
-                datasets: [
-                    {
-                        label: 'คะแนนเกณฑ์',
-                        data: data.map(d => d.reqscore),
-                        backgroundColor: 'rgba(66, 66, 66, 0.3)',
-                        borderColor: 'rgba(66, 66, 66, 0.8)',
-                        borderWidth: 3,
-                        pointBackgroundColor: 'rgba(66, 66, 66, 0.8)',
-                        datalabels: {
-                            color: 'white'
-                        },
-                        pointRadius: 8
-                    },
-                    {
-                        label: 'คะแนนสอบ',
-                        data: data.map(d => d.score),
-                        backgroundColor: 'rgba(57, 245, 22, 0.3)',
-                        borderColor: 'rgba(0, 81, 13, 1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: 'rgba(0, 81, 13, 1)',
-                        datalabels: {
-                            color: 'white'
-                        }
-                    },
-                    {
-                        label: 'คะแนนเต็ม',
-                        data: data.map(d => d.fullscore),
-                        backgroundColor: 'rgba(75, 192, 192, 0)',
-                        borderColor: 'rgba(0, 160, 199, 0.52)',
-                        borderWidth: 2,
-                        pointBackgroundColor: 'rgba(0, 160, 199, 0.8)',
-                        datalabels: {
-                            color: 'white'
-                        }
-                    }
-                ]
-            },
-            options: {
-                color: 'black',
-                scales: {
-                    r: {
-                        min: 10,
-                        max: 20,
-                        pointLabels: {
-                            color: (context) => {
-                                // Use 'context.index' to access the index of the data point
-                                const colorvalue = data[context.index].colorvalue;
-                                return colorvalue === 'green' ? 'green' : 'black';
-                            },
-                            font: {
-                                weight: 'bold',
-                                size: 9
-                            }
-                        },
-                        ticks: {
-                            backdropColor: 'rgba(75, 192, 192, 0)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'right',
-                        labels: {
-                            usePointStyle: true // This makes the legend labels use the same point style as data points
-                        }
-                    },
-                    datalabels: {
-                        font: {
-                            weight: 'bold',
-                            size: 15,
-                        },
-                        formatter: Math.round,
-                        padding: 1,
-                        borderRadius: 18
-                    }
-                },
-                // Core options
-                aspectRatio: 16 / 9,
-                elements: {
-                    point: {
-                        hoverRadius: 7,
-                        radius: 10
-                    },
-                    line: {
-                        tension: 0
-                    }
-                },
-            }
-        });
-    }
-    convertDataView(dataView, options) {
-        // console.log("Check converted",dataView)
-        const categoryValues = dataView.categorical.categories[0].values;
-        const scoreValues = dataView.categorical.values[0].values;
-        const reqscoreValues = dataView.categorical.values[1].values;
-        const fullscoreValues = dataView.categorical.values[2].values;
-        const maincourse = dataView.categorical.values[3].values;
-        const data = [];
-        // สร้างอาร์เรย์ช่วยในการเก็บข้อมูลสำหรับการเรียงลำดับ
-        const sortableData = [];
-        for (let i = 0; i < categoryValues.length; i++) {
-            sortableData.push({
-                category: categoryValues[i],
-                index: i
-            });
-        }
-        // เรียงลำดับตาม categoryValues
-        sortableData.sort((a, b) => {
-            // ควรปรับเปลี่ยนเงื่อนไขในการเปรียบเทียบตามค่าของ categoryValues ตามต้องการ
-            if (a.category < b.category)
-                return -1;
-            if (a.category > b.category)
-                return 1;
-            return 0;
-        });
-        // สร้างอาร์เรย์ข้อมูลที่เรียงลำดับแล้ว
-        for (const sortedDataItem of sortableData) {
-            const i = sortedDataItem.index;
-            const colorvalue = maincourse[i] === 'Y' ? 'green' : 'red';
-            data.push({
-                category: categoryValues[i],
-                score: scoreValues[i],
-                reqscore: reqscoreValues[i],
-                fullscore: fullscoreValues[i],
-                main: maincourse[i],
-                colorvalue: colorvalue
-            });
-        }
-        return data;
-    }
-    getFormattingModel() {
-        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
-    }
-}
-
-
-/***/ }),
-
 /***/ 28:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -295,7 +11,6 @@ class Visual {
 /* harmony export */ });
 /* harmony import */ var chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(672);
 /* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(148);
-/* provided dependency */ var window = __webpack_require__(738);
 /*!
  * chartjs-plugin-datalabels v2.2.0
  * https://chartjs-plugin-datalabels.netlify.app
@@ -1655,14 +1370,11 @@ var plugin = {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DP: () => (/* binding */ CompositeCard),
 /* harmony export */   Hn: () => (/* binding */ Model),
-/* harmony export */   L_: () => (/* binding */ NumUpDown),
-/* harmony export */   Zb: () => (/* binding */ Card),
-/* harmony export */   Zh: () => (/* binding */ ToggleSwitch),
-/* harmony export */   zH: () => (/* binding */ ColorPicker)
+/* harmony export */   sF: () => (/* binding */ SimpleCard)
 /* harmony export */ });
-/* unused harmony exports SimpleSlice, AlignmentGroup, Slider, DatePicker, ItemDropdown, AutoDropdown, DurationPicker, ErrorRangeControl, FieldPicker, ItemFlagsSelection, AutoFlagsSelection, TextInput, TextArea, FontPicker, GradientBar, ImageUpload, ListEditor, ReadOnlyText, ShapeMapSelector, CompositeSlice, FontControl, MarginPadding, Container, ContainerItem */
-/* harmony import */ var _utils_FormattingSettingsUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(827);
+/* unused harmony exports CardGroupEntity, Group, SimpleSlice, AlignmentGroup, ToggleSwitch, ColorPicker, NumUpDown, Slider, DatePicker, ItemDropdown, AutoDropdown, DurationPicker, ErrorRangeControl, FieldPicker, ItemFlagsSelection, AutoFlagsSelection, TextInput, TextArea, FontPicker, GradientBar, ImageUpload, ListEditor, ReadOnlyText, ShapeMapSelector, CompositeSlice, FontControl, MarginPadding, Container, ContainerItem */
 /**
  * Powerbi utils components classes for custom visual formatting pane objects
  *
@@ -1670,22 +1382,23 @@ var plugin = {
 
 class NamedEntity {
 }
+class CardGroupEntity extends NamedEntity {
+}
 class Model {
 }
-class Card extends NamedEntity {
-    getFormattingCard(objectName, group, localizationManager) {
-        return {
-            displayName: (localizationManager && this.displayNameKey)
-                ? localizationManager.getDisplayName(this.displayNameKey) : this.displayName,
-            description: (localizationManager && this.descriptionKey)
-                ? localizationManager.getDisplayName(this.descriptionKey) : this.description,
-            groups: [group],
-            uid: objectName,
-            analyticsPane: this.analyticsPane
-        };
+/** CompositeCard is use to populate a card into the formatting pane with multiple groups */
+class CompositeCard extends NamedEntity {
+}
+class Group extends (/* unused pure expression or super */ null && (CardGroupEntity)) {
+    constructor(object) {
+        super();
+        Object.assign(this, object);
     }
 }
-class SimpleSlice extends NamedEntity {
+/** SimpleCard is use to populate a card into the formatting pane in a single group */
+class SimpleCard extends CardGroupEntity {
+}
+class SimpleSlice extends (/* unused pure expression or super */ null && (NamedEntity)) {
     constructor(object) {
         super();
         Object.assign(this, object);
@@ -1707,7 +1420,7 @@ class SimpleSlice extends NamedEntity {
     }
     getFormattingComponent(objectName, localizationManager) {
         return {
-            descriptor: _utils_FormattingSettingsUtils__WEBPACK_IMPORTED_MODULE_0__/* .getDescriptor */ .B(objectName, this),
+            descriptor: FormattingSettingsParser.getDescriptor(objectName, this),
             value: this.value,
         };
     }
@@ -1720,7 +1433,7 @@ class SimpleSlice extends NamedEntity {
     setPropertiesValues(dataViewObjects, objectName) {
         var _a;
         let newValue = (_a = dataViewObjects === null || dataViewObjects === void 0 ? void 0 : dataViewObjects[objectName]) === null || _a === void 0 ? void 0 : _a[this.name];
-        this.value = _utils_FormattingSettingsUtils__WEBPACK_IMPORTED_MODULE_0__/* .getPropertyValue */ .S(this, newValue, this.value);
+        this.value = FormattingSettingsParser.getPropertyValue(this, newValue, this.value);
     }
 }
 class AlignmentGroup extends (/* unused pure expression or super */ null && (SimpleSlice)) {
@@ -1732,13 +1445,13 @@ class AlignmentGroup extends (/* unused pure expression or super */ null && (Sim
         return Object.assign(Object.assign({}, super.getFormattingComponent(objectName)), { mode: this.mode, supportsNoSelection: this.supportsNoSelection });
     }
 }
-class ToggleSwitch extends SimpleSlice {
+class ToggleSwitch extends (/* unused pure expression or super */ null && (SimpleSlice)) {
     constructor(object) {
         super(object);
         this.type = "ToggleSwitch" /* visuals.FormattingComponent.ToggleSwitch */;
     }
 }
-class ColorPicker extends SimpleSlice {
+class ColorPicker extends (/* unused pure expression or super */ null && (SimpleSlice)) {
     constructor(object) {
         super(object);
         this.type = "ColorPicker" /* visuals.FormattingComponent.ColorPicker */;
@@ -1747,7 +1460,7 @@ class ColorPicker extends SimpleSlice {
         return Object.assign(Object.assign({}, super.getFormattingComponent(objectName)), { defaultColor: this.defaultColor, isNoFillItemSupported: this.isNoFillItemSupported });
     }
 }
-class NumUpDown extends SimpleSlice {
+class NumUpDown extends (/* unused pure expression or super */ null && (SimpleSlice)) {
     constructor(object) {
         super(object);
         this.type = "NumUpDown" /* visuals.FormattingComponent.NumUpDown */;
@@ -1890,12 +1603,12 @@ class CompositeSlice extends (/* unused pure expression or super */ null && (Nam
         super();
         Object.assign(this, object);
     }
-    getFormattingSlice(objectName) {
+    getFormattingSlice(objectName, localizationManager) {
         const controlType = this.type;
         const propertyName = this.name;
         const componentDisplayName = {
-            displayName: this.displayName,
-            description: this.description,
+            displayName: (localizationManager && this.displayNameKey) ? localizationManager.getDisplayName(this.displayNameKey) : this.displayName,
+            description: (localizationManager && this.descriptionKey) ? localizationManager.getDisplayName(this.descriptionKey) : this.description,
             uid: objectName + '-' + propertyName,
         };
         return Object.assign(Object.assign({}, componentDisplayName), { control: {
@@ -1962,6 +1675,10 @@ class MarginPadding extends (/* unused pure expression or super */ null && (Comp
     }
 }
 class Container extends (/* unused pure expression or super */ null && (NamedEntity)) {
+    constructor(object) {
+        super();
+        Object.assign(this, object);
+    }
 }
 class ContainerItem extends (/* unused pure expression or super */ null && (NamedEntity)) {
 }
@@ -1976,6 +1693,8 @@ class ContainerItem extends (/* unused pure expression or super */ null && (Name
 /* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* unused harmony export FormattingSettingsService */
+/* harmony import */ var _FormattingSettingsComponents__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(84);
+
 class FormattingSettingsService {
     constructor(localizationManager) {
         this.localizationManager = localizationManager;
@@ -1986,21 +1705,29 @@ class FormattingSettingsService {
      * @param dataViews metadata dataView object
      * @returns visual formatting settings model
      */
-    populateFormattingSettingsModel(typeClass, dataViews) {
-        var _a, _b, _c;
+    populateFormattingSettingsModel(typeClass, dataView) {
+        var _a, _b;
         let defaultSettings = new typeClass();
-        let dataViewObjects = (_b = (_a = dataViews === null || dataViews === void 0 ? void 0 : dataViews[0]) === null || _a === void 0 ? void 0 : _a.metadata) === null || _b === void 0 ? void 0 : _b.objects;
+        let dataViewObjects = (_a = dataView === null || dataView === void 0 ? void 0 : dataView.metadata) === null || _a === void 0 ? void 0 : _a.objects;
         if (dataViewObjects) {
             // loop over each formatting property and set its new value if exists
-            (_c = defaultSettings.cards) === null || _c === void 0 ? void 0 : _c.forEach((card) => {
-                var _a, _b, _c;
-                (_a = card === null || card === void 0 ? void 0 : card.slices) === null || _a === void 0 ? void 0 : _a.forEach((slice) => {
-                    slice === null || slice === void 0 ? void 0 : slice.setPropertiesValues(dataViewObjects, card.name);
-                });
-                (_c = (_b = card === null || card === void 0 ? void 0 : card.container) === null || _b === void 0 ? void 0 : _b.containerItems) === null || _c === void 0 ? void 0 : _c.forEach((containerItem) => {
-                    var _a;
-                    (_a = containerItem === null || containerItem === void 0 ? void 0 : containerItem.slices) === null || _a === void 0 ? void 0 : _a.forEach((slice) => {
+            (_b = defaultSettings.cards) === null || _b === void 0 ? void 0 : _b.forEach((card) => {
+                var _a;
+                if (card instanceof _FormattingSettingsComponents__WEBPACK_IMPORTED_MODULE_0__/* .CompositeCard */ .DP)
+                    (_a = card.topLevelSlice) === null || _a === void 0 ? void 0 : _a.setPropertiesValues(dataViewObjects, card.name);
+                const cardGroupInstances = (card instanceof _FormattingSettingsComponents__WEBPACK_IMPORTED_MODULE_0__/* .SimpleCard */ .sF ? [card] : card.groups);
+                cardGroupInstances.forEach((cardGroupInstance) => {
+                    var _a, _b, _c, _d;
+                    // Set current top level toggle value
+                    (_a = cardGroupInstance.topLevelSlice) === null || _a === void 0 ? void 0 : _a.setPropertiesValues(dataViewObjects, card.name);
+                    (_b = cardGroupInstance === null || cardGroupInstance === void 0 ? void 0 : cardGroupInstance.slices) === null || _b === void 0 ? void 0 : _b.forEach((slice) => {
                         slice === null || slice === void 0 ? void 0 : slice.setPropertiesValues(dataViewObjects, card.name);
+                    });
+                    (_d = (_c = cardGroupInstance === null || cardGroupInstance === void 0 ? void 0 : cardGroupInstance.container) === null || _c === void 0 ? void 0 : _c.containerItems) === null || _d === void 0 ? void 0 : _d.forEach((containerItem) => {
+                        var _a;
+                        (_a = containerItem === null || containerItem === void 0 ? void 0 : containerItem.slices) === null || _a === void 0 ? void 0 : _a.forEach((slice) => {
+                            slice === null || slice === void 0 ? void 0 : slice.setPropertiesValues(dataViewObjects, card.name);
+                        });
                     });
                 });
             });
@@ -2013,64 +1740,98 @@ class FormattingSettingsService {
      * @returns powerbi visual formatting model
      */
     buildFormattingModel(formattingSettingsModel) {
-        var _a;
         let formattingModel = {
             cards: []
         };
-        (_a = formattingSettingsModel.cards) === null || _a === void 0 ? void 0 : _a.forEach((card) => {
-            if (!card)
-                return;
-            const objectName = card.name;
-            const groupUid = card.name + "-group";
-            let formattingGroup = {
-                displayName: undefined,
-                slices: [],
-                uid: groupUid
+        formattingSettingsModel.cards
+            .filter(({ visible = true }) => visible)
+            .forEach((card) => {
+            var _a;
+            let formattingCard = {
+                displayName: (this.localizationManager && card.displayNameKey) ? this.localizationManager.getDisplayName(card.displayNameKey) : card.displayName,
+                description: (this.localizationManager && card.descriptionKey) ? this.localizationManager.getDisplayName(card.descriptionKey) : card.description,
+                groups: [],
+                uid: card.name + "-card",
+                analyticsPane: card.analyticsPane,
             };
-            let formattingCard = card.getFormattingCard(objectName, formattingGroup, this.localizationManager);
-            formattingModel.cards.push(formattingCard);
-            // In case formatting model adds data points or top categories (Like when you modify specific visual category color).
-            // these categories use same object name and property name from capabilities and the generated uid will be the same for these formatting categories properties
-            // Solution => Save slice names to modify each slice uid to be unique by adding counter value to the new slice uid
-            const sliceNames = {};
-            // Build formatting container slice for each property
-            if (card.container) {
-                const container = card.container;
-                const containerUid = groupUid + "-container";
-                const formattingContainer = {
-                    displayName: (this.localizationManager && container.displayNameKey)
-                        ? this.localizationManager.getDisplayName(container.displayNameKey) : container.displayName,
-                    description: (this.localizationManager && container.descriptionKey)
-                        ? this.localizationManager.getDisplayName(container.descriptionKey) : container.description,
-                    containerItems: [],
-                    uid: containerUid
+            const objectName = card.name;
+            if (card.topLevelSlice) {
+                let topLevelToggleSlice = card.topLevelSlice.getFormattingSlice(objectName, this.localizationManager);
+                topLevelToggleSlice.suppressDisplayName = true;
+                formattingCard.topLevelToggle = topLevelToggleSlice;
+            }
+            (_a = card.onPreProcess) === null || _a === void 0 ? void 0 : _a.call(card);
+            const isSimpleCard = card instanceof _FormattingSettingsComponents__WEBPACK_IMPORTED_MODULE_0__/* .SimpleCard */ .sF;
+            const cardGroupInstances = (isSimpleCard ?
+                [card].filter(({ visible = true }) => visible) :
+                card.groups.filter(({ visible = true }) => visible));
+            cardGroupInstances
+                .forEach((cardGroupInstance) => {
+                const groupUid = cardGroupInstance.name + "-group";
+                // Build formatting group for each group
+                const formattingGroup = {
+                    displayName: isSimpleCard ? undefined : (this.localizationManager && cardGroupInstance.displayNameKey)
+                        ? this.localizationManager.getDisplayName(cardGroupInstance.displayNameKey) : cardGroupInstance.displayName,
+                    description: isSimpleCard ? undefined : (this.localizationManager && cardGroupInstance.descriptionKey)
+                        ? this.localizationManager.getDisplayName(cardGroupInstance.descriptionKey) : cardGroupInstance.description,
+                    slices: [],
+                    uid: groupUid,
+                    collapsible: cardGroupInstance.collapsible,
+                    delaySaveSlices: cardGroupInstance.delaySaveSlices,
+                    disabled: cardGroupInstance.disabled,
+                    disabledReason: cardGroupInstance.disabledReason,
                 };
-                container.containerItems.forEach((containerItem) => {
-                    // Build formatting container item object
-                    const containerIemName = containerItem.displayNameKey ? containerItem.displayNameKey : containerItem.displayName;
-                    const containerItemUid = containerUid + containerIemName;
-                    let formattingContainerItem = {
-                        displayName: (this.localizationManager && containerItem.displayNameKey)
-                            ? this.localizationManager.getDisplayName(containerItem.displayNameKey) : containerItem.displayName,
-                        slices: [],
-                        uid: containerItemUid
+                formattingCard.groups.push(formattingGroup);
+                // In case formatting model adds data points or top categories (Like when you modify specific visual category color).
+                // these categories use same object name and property name from capabilities and the generated uid will be the same for these formatting categories properties
+                // Solution => Save slice names to modify each slice uid to be unique by adding counter value to the new slice uid
+                const sliceNames = {};
+                // Build formatting container slice for each property
+                if (cardGroupInstance.container) {
+                    const container = cardGroupInstance.container;
+                    const containerUid = groupUid + "-container";
+                    const formattingContainer = {
+                        displayName: (this.localizationManager && container.displayNameKey)
+                            ? this.localizationManager.getDisplayName(container.displayNameKey) : container.displayName,
+                        description: (this.localizationManager && container.descriptionKey)
+                            ? this.localizationManager.getDisplayName(container.descriptionKey) : container.description,
+                        containerItems: [],
+                        uid: containerUid
                     };
-                    // Build formatting slices and add them to current formatting container item
-                    this.buildFormattingSlices(containerItem.slices, objectName, sliceNames, formattingCard, formattingContainerItem.slices);
-                    formattingContainer.containerItems.push(formattingContainerItem);
-                });
-                formattingGroup.container = formattingContainer;
-            }
-            if (card.slices) {
-                // Build formatting slice for each property
-                this.buildFormattingSlices(card.slices, objectName, sliceNames, formattingCard, formattingGroup.slices);
-            }
+                    container.containerItems.forEach((containerItem) => {
+                        // Build formatting container item object
+                        const containerIemName = containerItem.displayNameKey ? containerItem.displayNameKey : containerItem.displayName;
+                        const containerItemUid = containerUid + containerIemName;
+                        let formattingContainerItem = {
+                            displayName: (this.localizationManager && containerItem.displayNameKey)
+                                ? this.localizationManager.getDisplayName(containerItem.displayNameKey) : containerItem.displayName,
+                            slices: [],
+                            uid: containerItemUid
+                        };
+                        // Build formatting slices and add them to current formatting container item
+                        this.buildFormattingSlices({ slices: containerItem.slices, objectName, sliceNames, formattingSlices: formattingContainerItem.slices });
+                        formattingContainer.containerItems.push(formattingContainerItem);
+                    });
+                    formattingGroup.container = formattingContainer;
+                }
+                if (cardGroupInstance.slices) {
+                    if (cardGroupInstance.topLevelSlice) {
+                        let topLevelToggleSlice = cardGroupInstance.topLevelSlice.getFormattingSlice(objectName, this.localizationManager);
+                        topLevelToggleSlice.suppressDisplayName = true;
+                        (formattingGroup.displayName == undefined ? formattingCard : formattingGroup).topLevelToggle = topLevelToggleSlice;
+                    }
+                    // Build formatting slice for each property
+                    this.buildFormattingSlices({ slices: cardGroupInstance.slices, objectName, sliceNames, formattingSlices: formattingGroup.slices });
+                }
+            });
             formattingCard.revertToDefaultDescriptors = this.getRevertToDefaultDescriptor(card);
+            formattingModel.cards.push(formattingCard);
         });
         return formattingModel;
     }
-    buildFormattingSlices(slices, objectName, sliceNames, formattingCard, formattingSlices) {
-        slices === null || slices === void 0 ? void 0 : slices.forEach((slice) => {
+    buildFormattingSlices({ slices, objectName, sliceNames, formattingSlices }) {
+        // Filter slices based on their visibility
+        slices === null || slices === void 0 ? void 0 : slices.filter(({ visible = true }) => visible).forEach((slice) => {
             let formattingSlice = slice === null || slice === void 0 ? void 0 : slice.getFormattingSlice(objectName, this.localizationManager);
             if (formattingSlice) {
                 // Modify formatting slice uid if needed
@@ -2081,33 +1842,39 @@ class FormattingSettingsService {
                     sliceNames[slice.name]++;
                     formattingSlice.uid = `${formattingSlice.uid}-${sliceNames[slice.name]}`;
                 }
-                // Set as topLevelToggle if topLevelToggle boolean was set to true
-                if (slice.topLevelToggle) {
-                    formattingSlice.suppressDisplayName = true;
-                    formattingCard.topLevelToggle = formattingSlice;
-                }
-                else {
-                    formattingSlices.push(formattingSlice);
-                }
+                formattingSlices.push(formattingSlice);
             }
         });
     }
     getRevertToDefaultDescriptor(card) {
-        var _a, _b;
+        var _a;
         // Proceeded slice names are saved to prevent duplicated default descriptors in case of using 
         // formatting categories & selectors, since they have the same descriptor objectName and propertyName
         const sliceNames = {};
         let revertToDefaultDescriptors = [];
-        let cardSlicesDefaultDescriptors = this.getSlicesRevertToDefaultDescriptor(card.name, card.slices, sliceNames);
+        let cardSlicesDefaultDescriptors;
         let cardContainerSlicesDefaultDescriptors = [];
-        (_b = (_a = card.container) === null || _a === void 0 ? void 0 : _a.containerItems) === null || _b === void 0 ? void 0 : _b.forEach((containerItem) => {
-            cardContainerSlicesDefaultDescriptors = cardContainerSlicesDefaultDescriptors.concat(this.getSlicesRevertToDefaultDescriptor(card.name, containerItem.slices, sliceNames));
+        if (card instanceof _FormattingSettingsComponents__WEBPACK_IMPORTED_MODULE_0__/* .CompositeCard */ .DP && card.topLevelSlice)
+            revertToDefaultDescriptors.push(...(_a = card.topLevelSlice) === null || _a === void 0 ? void 0 : _a.getRevertToDefaultDescriptor(card.name));
+        const cardGroupInstances = (card instanceof _FormattingSettingsComponents__WEBPACK_IMPORTED_MODULE_0__/* .SimpleCard */ .sF ?
+            [card].filter(({ visible = true }) => visible) :
+            card.groups.filter(({ visible = true }) => visible));
+        cardGroupInstances.forEach((cardGroupInstance) => {
+            var _a, _b;
+            cardSlicesDefaultDescriptors = this.getSlicesRevertToDefaultDescriptor(card.name, cardGroupInstance.slices, sliceNames, cardGroupInstance.topLevelSlice);
+            (_b = (_a = cardGroupInstance.container) === null || _a === void 0 ? void 0 : _a.containerItems) === null || _b === void 0 ? void 0 : _b.forEach((containerItem) => {
+                cardContainerSlicesDefaultDescriptors = cardContainerSlicesDefaultDescriptors.concat(this.getSlicesRevertToDefaultDescriptor(card.name, containerItem.slices, sliceNames));
+            });
+            revertToDefaultDescriptors.push(...cardSlicesDefaultDescriptors.concat(cardContainerSlicesDefaultDescriptors));
         });
-        revertToDefaultDescriptors = cardSlicesDefaultDescriptors.concat(cardContainerSlicesDefaultDescriptors);
         return revertToDefaultDescriptors;
     }
-    getSlicesRevertToDefaultDescriptor(cardName, slices, sliceNames) {
+    getSlicesRevertToDefaultDescriptor(cardName, slices, sliceNames, topLevelSlice) {
         let revertToDefaultDescriptors = [];
+        if (topLevelSlice) {
+            sliceNames[topLevelSlice.name] = true;
+            revertToDefaultDescriptors = revertToDefaultDescriptors.concat(topLevelSlice.getRevertToDefaultDescriptor(cardName));
+        }
         slices === null || slices === void 0 ? void 0 : slices.forEach((slice) => {
             if (slice && !sliceNames[slice.name]) {
                 sliceNames[slice.name] = true;
@@ -2122,58 +1889,290 @@ class FormattingSettingsService {
 
 /***/ }),
 
-/***/ 827:
+/***/ 265:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   B: () => (/* binding */ getDescriptor),
-/* harmony export */   S: () => (/* binding */ getPropertyValue)
+/* harmony export */   E: () => (/* binding */ VisualFormattingSettingsModel)
 /* harmony export */ });
+/* harmony import */ var powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(84);
+
+
+var FormattingSettingsModel = powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .Model */ .Hn;
 /**
- * Build and return formatting descriptor for simple slice
- *
- * @param objectName Object name from capabilities
- * @param slice formatting simple slice
- * @returns simple slice formatting descriptor
+ * Data Point Formatting Card
  */
-function getDescriptor(objectName, slice) {
-    return {
-        objectName: objectName,
-        propertyName: slice.name,
-        selector: slice.selector,
-        altConstantValueSelector: slice.altConstantSelector,
-        instanceKind: slice.instanceKind
-    };
-}
 /**
- * Get property value from dataview objects if exists
- * Else return the default value from formatting settings object
- *
- * @param value dataview object value
- * @param defaultValue formatting settings default value
- * @returns formatting property value
- */
-function getPropertyValue(slice, value, defaultValue) {
-    if (value == null || (typeof value === "object" && !value.solid)) {
-        return defaultValue;
-    }
-    if (value.solid) {
-        return { value: value === null || value === void 0 ? void 0 : value.solid.color };
-    }
-    if (slice === null || slice === void 0 ? void 0 : slice.items) {
-        let itemsArray = slice.items;
-        return itemsArray.find(item => item.value == value);
-    }
-    return value;
+* visual settings model class
+*
+*/
+class VisualFormattingSettingsModel extends FormattingSettingsModel {
 }
-//# sourceMappingURL=FormattingSettingsUtils.js.map
+
 
 /***/ }),
 
-/***/ 738:
-/***/ ((module) => {
+/***/ 604:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-module.exports = Function('return this')();
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   u: () => (/* binding */ Visual)
+/* harmony export */ });
+/* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(85);
+/* harmony import */ var chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(28);
+/* harmony import */ var powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(261);
+/* harmony import */ var chartjs_plugin_annotation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(282);
+/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(265);
+
+
+
+
+
+
+
+
+class Visual {
+    constructor(options) {
+        this.consoleupdatecount = 0;
+        // console.log('Visual constructor', options);
+        this.formattingSettingsService = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
+        this.target = options.element;
+        this.updateCount = 0;
+        if (document) {
+            const new_p = document.createElement("p");
+            new_p.appendChild(document.createTextNode("Update count:"));
+            const new_em = document.createElement("em");
+            this.textNode = document.createTextNode(this.updateCount.toString());
+            new_em.appendChild(this.textNode);
+            new_p.appendChild(new_em);
+            this.target.appendChild(new_p);
+        }
+    }
+    update(options) {
+        console.clear();
+        console.log("%cUPDATED ACTIVATE", 'background-color: yellow', this.consoleupdatecount++);
+        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(_settings__WEBPACK_IMPORTED_MODULE_2__/* .VisualFormattingSettingsModel */ .E, options.dataViews[0]);
+        this.target.innerHTML = '';
+        this.target.style.display = 'flex';
+        this.target.style.justifyContent = 'left';
+        this.target.style.alignItems = 'left';
+        const canvas = document.createElement('canvas');
+        canvas.width = options.viewport.width;
+        canvas.height = options.viewport.height;
+        this.target.appendChild(canvas);
+        let dataView = options.dataViews[0];
+        const calldata = (this.convertDataView(dataView, options));
+        if (!calldata) {
+            console.log('Blank');
+        }
+        let datamain = calldata.filter(d => d.main == "Y");
+        let dataplus = calldata.filter(d => d.main == "N" && d.score !== null);
+        let cgm = datamain[0].coursegroupid;
+        let filteredData = calldata.filter(d => cgm.includes(d.courseid));
+        let combinedData = [...filteredData, ...dataplus];
+        console.log("%cfilted data", 'background-color: cyan; font-weight: bold', filteredData);
+        console.log("%cMAIN DATA", 'background-color: cyan; font-weight: bold', datamain);
+        console.log("%cPLUS DATA", 'background-color: cyan; font-weight: bold', dataplus);
+        let datachart = combinedData;
+        console.log("%cData Chart", 'background-color: lime; font-weight: bold', datachart);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////// C H A R T /////////////////////// C H A R T //////////////// C H A R T //////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
+        const ctx = canvas.getContext('2d');
+        if (this.chart) {
+            this.chart.destroy();
+        }
+        chart_js_auto__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .ZP.register(chartjs_plugin_datalabels__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z);
+        chart_js_auto__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .ZP.register(chartjs_plugin_annotation__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z);
+        this.chart = new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .ZP(ctx, {
+            type: 'radar',
+            data: {
+                labels: datachart.map(d => d.category),
+                datasets: [
+                    {
+                        label: 'คะแนนสอบ',
+                        data: datachart.map(d => d.score),
+                        backgroundColor: 'rgba(57, 245, 22, 0.3)',
+                        borderColor: 'rgba(0, 81, 13, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(0, 233, 27, 0.8)',
+                        datalabels: {
+                            color: 'black',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            },
+                            offset: 8,
+                            align: 'center'
+                        }
+                    },
+                    {
+                        label: 'คะแนนเต็ม',
+                        data: datachart.map(d => d.fullscore),
+                        backgroundColor: 'rgba(75, 192, 192, 0)',
+                        borderColor: 'rgba(0, 160, 199, 0.52)',
+                        borderWidth: 1,
+                        pointBackgroundColor: 'rgba(0, 160, 199, 1)',
+                        datalabels: {
+                            color: 'white',
+                            align: 'center',
+                            font: {
+                                size: 8
+                            }
+                        }
+                    },
+                    {
+                        label: 'คะแนนเกณฑ์',
+                        data: datachart.map(d => d.reqscore),
+                        backgroundColor: 'rgba(255, 242, 4, 0.8)',
+                        borderColor: 'rgba(66, 66, 66, 0.8)',
+                        borderWidth: 1,
+                        pointBackgroundColor: 'rgba(66, 66, 66, 0.8)',
+                        datalabels: {
+                            color: 'white',
+                            font: {
+                                size: 8
+                            }
+                        },
+                        pointRadius: 8
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                color: 'black',
+                scales: {
+                    r: {
+                        min: 10,
+                        max: 20,
+                        pointLabels: {
+                            color: (context) => {
+                                // Use 'context.index' to access the index of the data point
+                                const colorvalue = datachart[context.index].colorvalue;
+                                return colorvalue === 'green' ? 'green' : 'black';
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 13
+                            }
+                        },
+                        ticks: {
+                            backdropColor: 'rgba(75, 192, 192, 0)'
+                        }
+                    }
+                },
+                plugins: {
+                    annotation: {},
+                    legend: {
+                        display: true,
+                        position: 'right',
+                        labels: {
+                            usePointStyle: false
+                        }
+                    }
+                },
+                aspectRatio: 21 / 9,
+                elements: {
+                    point: {
+                        hoverRadius: 7,
+                        radius: 10
+                    }
+                },
+            }
+        });
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////// C H A R T /////////////////////// C H A R T //////////////// C H A R T //////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////     
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////// C O N V E R T    F U N C T I O N ////////////////////// C O N V E R T    F U N C T I O N ////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+    convertDataView(dataView, options) {
+        try {
+            var css = "text-shadow: -1px -1px 0px var(--background), 3px 3px 0px var(--background), 6px 6px 0px #00000055; font-size: 28px; font-weight: bold; color: blue;";
+            console.log("%cConvert data view activated !", css, dataView, options);
+            const categoryValues = dataView.categorical.categories[0].values;
+            const scoreValues = dataView.categorical.values[0].values;
+            const reqscoreValues = dataView.categorical.values[1].values;
+            const fullscoreValues = dataView.categorical.values[2].values;
+            const maincourse = dataView.categorical.values[3].values;
+            const position = dataView.categorical.values[4].values;
+            const courseid = dataView.categorical.values[5].values;
+            const coursegroupid = dataView.categorical.values[6].values;
+            const nonNullIndex = coursegroupid.findIndex(item => item !== null);
+            let cleanString = JSON.parse(coursegroupid[nonNullIndex].toString());
+            console.log(cleanString);
+            let finaldata = [];
+            var css = "text-shadow: -1px -1px 0px var(--background), 3px 3px 0px var(--background), 6px 6px 0px #00000055; font-size: 18px; font-weight: bold; color: white; background-color:black;";
+            console.log("%cMain course here", css, cleanString, options);
+            console.log("data", finaldata);
+            // เรียงลำดับข้อตัวอักษร
+            const sortableData = [];
+            for (let i = 0; i < categoryValues.length; i++) {
+                sortableData.push({
+                    category: categoryValues[i],
+                    index: i
+                });
+            }
+            // เรียงลำดับตาม categoryValues
+            try {
+                sortableData.sort((a, b) => {
+                    if (a.category < b.category)
+                        return -1;
+                    if (a.category > b.category)
+                        return 1;
+                    return 0;
+                });
+            }
+            catch (_a) {
+                console.log("Sort data error");
+            }
+            // final array
+            for (const sortedDataItem of sortableData) {
+                const i = sortedDataItem.index;
+                const colorvalue = maincourse[i] === 'Y' ? 'green' : 'red';
+                const score = Number(scoreValues[i]) > 30 ? null : scoreValues[i];
+                const reqscore = Number(scoreValues[i]) > 30 ? null : reqscoreValues[i];
+                const fullscore = Number(fullscoreValues[i]) > 30 ? null : fullscoreValues[i];
+                const positionID = position[i];
+                const courseID = courseid[i];
+                let category = categoryValues[i];
+                if (colorvalue === 'green') {
+                    category = `⭐ ${category}`;
+                }
+                ;
+                try {
+                    finaldata.push({
+                        category: category,
+                        score: score,
+                        reqscore: reqscore,
+                        fullscore: fullscore,
+                        main: maincourse[i],
+                        colorvalue: colorvalue,
+                        position: positionID,
+                        courseid: courseID,
+                        coursegroupid: cleanString
+                    });
+                }
+                catch (_b) {
+                    console.log("data push error");
+                }
+            }
+            return finaldata;
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////// C O N V E R T    F U N C T I O N ////////////////////// C O N V E R T    F U N C T I O N ////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+    getFormattingModel() {
+        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
+    }
+}
+
 
 /***/ }),
 
@@ -2798,17 +2797,18 @@ _dist_chart_js__WEBPACK_IMPORTED_MODULE_0__/* .Chart */ .kL.register(..._dist_ch
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FK: () => (/* binding */ Animations),
+/* harmony export */   W_: () => (/* binding */ Element),
 /* harmony export */   ZL: () => (/* binding */ BarElement),
 /* harmony export */   kL: () => (/* binding */ Chart),
 /* harmony export */   od: () => (/* binding */ PointElement),
 /* harmony export */   qi: () => (/* binding */ ArcElement),
 /* harmony export */   zX: () => (/* binding */ registerables)
 /* harmony export */ });
-/* unused harmony exports Animation, Animations, BarController, BasePlatform, BasicPlatform, BubbleController, CategoryScale, Colors, DatasetController, Decimation, DomPlatform, DoughnutController, Element, Filler, Interaction, Legend, LineController, LineElement, LinearScale, LogarithmicScale, PieController, PolarAreaController, RadarController, RadialLinearScale, Scale, ScatterController, SubTitle, TimeScale, TimeSeriesScale, Title, Tooltip, _adapters, _detectPlatform, animator, controllers, elements, layouts, plugins, registry, scales */
+/* unused harmony exports Animation, BarController, BasePlatform, BasicPlatform, BubbleController, CategoryScale, Colors, DatasetController, Decimation, DomPlatform, DoughnutController, Filler, Interaction, Legend, LineController, LineElement, LinearScale, LogarithmicScale, PieController, PolarAreaController, RadarController, RadialLinearScale, Scale, ScatterController, SubTitle, TimeScale, TimeSeriesScale, Title, Tooltip, _adapters, _detectPlatform, animator, controllers, elements, layouts, plugins, registry, scales */
 /* harmony import */ var _chunks_helpers_segment_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(672);
-/* provided dependency */ var window = __webpack_require__(738);
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.4.0
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -5273,6 +5273,9 @@ class ScatterController extends DatasetController {
             count = points.length;
         }
         if (this.options.showLine) {
+            if (!this.datasetElementType) {
+                this.addElements();
+            }
             const { dataset: line , _dataset  } = meta;
             line._chart = this.chart;
             line._datasetIndex = this.index;
@@ -5284,6 +5287,9 @@ class ScatterController extends DatasetController {
                 animated: !animationsDisabled,
                 options
             }, mode);
+        } else if (this.datasetElementType) {
+            delete meta.dataset;
+            this.datasetElementType = false;
         }
         this.updateElements(points, start, count, mode);
     }
@@ -8302,7 +8308,7 @@ function needContext(proxy, names) {
     return false;
 }
 
-var version = "4.3.0";
+var version = "4.4.0";
 
 const KNOWN_POSITIONS = [
     'top',
@@ -8372,16 +8378,20 @@ function moveNumericKeys(obj, start, move) {
     }
     return e;
 }
-function getDatasetArea(meta) {
+function getSizeForArea(scale, chartArea, field) {
+    return scale.options.clip ? scale[field] : chartArea[field];
+}
+function getDatasetArea(meta, chartArea) {
     const { xScale , yScale  } = meta;
     if (xScale && yScale) {
         return {
-            left: xScale.left,
-            right: xScale.right,
-            top: yScale.top,
-            bottom: yScale.bottom
+            left: getSizeForArea(xScale, chartArea, 'left'),
+            right: getSizeForArea(xScale, chartArea, 'right'),
+            top: getSizeForArea(yScale, chartArea, 'top'),
+            bottom: getSizeForArea(yScale, chartArea, 'bottom')
         };
     }
+    return chartArea;
 }
 class Chart {
     static defaults = _chunks_helpers_segment_js__WEBPACK_IMPORTED_MODULE_0__.d;
@@ -8883,7 +8893,7 @@ class Chart {
         const ctx = this.ctx;
         const clip = meta._clip;
         const useClip = !clip.disabled;
-        const area = getDatasetArea(meta) || this.chartArea;
+        const area = getDatasetArea(meta, this.chartArea);
         const args = {
             meta,
             index: meta.index,
@@ -11266,7 +11276,7 @@ class Legend extends Element {
                 cursor.x += width + padding;
             } else if (typeof legendItem.text !== 'string') {
                 const fontLineHeight = labelFont.lineHeight;
-                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight);
+                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight) + padding;
             } else {
                 cursor.y += lineHeight;
             }
@@ -11380,7 +11390,7 @@ function calculateItemHeight(_itemHeight, legendItem, fontLineHeight) {
     return itemHeight;
 }
 function calculateLegendItemHeight(legendItem, fontLineHeight) {
-    const labelHeight = legendItem.text ? legendItem.text.length + 0.5 : 0;
+    const labelHeight = legendItem.text ? legendItem.text.length : 0;
     return fontLineHeight * labelHeight;
 }
 function isListened(type, opts) {
@@ -13684,7 +13694,9 @@ class RadialLinearScale extends LinearScaleBase {
                 ctx.fillRect(-width / 2 - padding.left, -offset - tickFont.size / 2 - padding.top, width + padding.width, tickFont.size + padding.height);
             }
             (0,_chunks_helpers_segment_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, tick.label, 0, -offset, tickFont, {
-                color: optsAtIndex.color
+                color: optsAtIndex.color,
+                strokeColor: optsAtIndex.textStrokeColor,
+                strokeWidth: optsAtIndex.textStrokeWidth
             });
         });
         ctx.restore();
@@ -14004,7 +14016,7 @@ class TimeScale extends Scale {
         if (time === max || options.bounds === 'ticks' || count === 1) {
             addTick(ticks, time, timestamps);
         }
-        return Object.keys(ticks).sort((a, b)=>a - b).map((x)=>+x);
+        return Object.keys(ticks).sort(sorter).map((x)=>+x);
     }
  getLabelForValue(value) {
         const adapter = this._adapter;
@@ -14187,6 +14199,18 @@ class TimeSeriesScale extends TimeScale {
         }
         return table;
     }
+ _generate() {
+        const min = this.min;
+        const max = this.max;
+        let timestamps = super.getDataTimestamps();
+        if (!timestamps.includes(min) || !timestamps.length) {
+            timestamps.splice(0, 0, min);
+        }
+        if (!timestamps.includes(max) || timestamps.length === 1) {
+            timestamps.push(max);
+        }
+        return timestamps.sort((a, b)=>a - b);
+    }
  _getTimestampsForTable() {
         let timestamps = this._cache.all || [];
         if (timestamps.length) {
@@ -14321,6 +14345,9 @@ const registerables = [
 /* harmony export */   ay: () => (/* binding */ _normalizeAngle),
 /* harmony export */   az: () => (/* binding */ getRtlAdapter),
 /* harmony export */   b: () => (/* binding */ isArray),
+/* harmony export */   b3: () => (/* binding */ RAD_PER_DEG),
+/* harmony export */   b4: () => (/* binding */ QUARTER_PI),
+/* harmony export */   b5: () => (/* binding */ TWO_THIRDS_PI),
 /* harmony export */   c: () => (/* binding */ color),
 /* harmony export */   d: () => (/* binding */ defaults),
 /* harmony export */   e: () => (/* binding */ effects),
@@ -14346,11 +14373,10 @@ const registerables = [
 /* harmony export */   y: () => (/* binding */ _parseObjectDataRadialScale),
 /* harmony export */   z: () => (/* binding */ getRelativePosition)
 /* harmony export */ });
-/* unused harmony exports a$, aQ, aR, aS, aT, aU, aV, aW, aX, aY, aZ, a_, b0, b1, b2, b3, b4, b5, b6 */
+/* unused harmony exports a$, aQ, aR, aS, aT, aU, aV, aW, aX, aY, aZ, a_, b0, b1, b2, b6 */
 /* harmony import */ var _kurkle_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(193);
-/* provided dependency */ var window = __webpack_require__(738);
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.4.0
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -14978,7 +15004,7 @@ function fontString(pixelSize, fontStyle, fontFamily) {
         const { min , max , minDefined , maxDefined  } = iScale.getUserBounds();
         if (minDefined) {
             start = _limitValue(Math.min(// @ts-expect-error Need to type _parsed
-            _lookupByKey(_parsed, iScale.axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
+            _lookupByKey(_parsed, axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
             animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo), 0, pointCount - 1);
         }
         if (maxDefined) {
@@ -15269,6 +15295,7 @@ function applyScaleDefaults(defaults) {
         reverse: false,
         beginAtZero: false,
  bounds: 'ticks',
+        clip: true,
  grace: 0,
         grid: {
             display: true,
@@ -15807,7 +15834,7 @@ function drawBackdrop(ctx, opts) {
  */ function addRoundedRectPath(ctx, rect) {
     const { x , y , w , h , radius  } = rect;
     // top left arc
-    ctx.arc(x + radius.topLeft, y + radius.topLeft, radius.topLeft, -HALF_PI, PI, true);
+    ctx.arc(x + radius.topLeft, y + radius.topLeft, radius.topLeft, 1.5 * PI, PI, true);
     // line from top left to bottom left
     ctx.lineTo(x, y + h - radius.bottomLeft);
     // bottom left arc
@@ -17094,6 +17121,2766 @@ function styleChanged(style, prevStyle) {
 //# sourceMappingURL=helpers.segment.js.map
 
 
+/***/ }),
+
+/***/ 282:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (/* binding */ annotation)
+/* harmony export */ });
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(148);
+/* harmony import */ var chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(672);
+/*!
+* chartjs-plugin-annotation v3.0.1
+* https://www.chartjs.org/chartjs-plugin-annotation/index
+ * (c) 2023 chartjs-plugin-annotation Contributors
+ * Released under the MIT License
+ */
+
+
+
+/**
+ * @typedef { import("chart.js").ChartEvent } ChartEvent
+ * @typedef { import('../../types/element').AnnotationElement } AnnotationElement
+ */
+
+const interaction = {
+  modes: {
+    /**
+     * Point mode returns all elements that hit test based on the event position
+     * @param {Object} state - the state of the plugin
+     * @param {ChartEvent} event - the event we are find things at
+     * @return {AnnotationElement[]} - elements that are found
+     */
+    point(state, event) {
+      return filterElements(state, event, {intersect: true});
+    },
+
+    /**
+     * Nearest mode returns the element closest to the event position
+     * @param {Object} state - the state of the plugin
+     * @param {ChartEvent} event - the event we are find things at
+     * @param {Object} options - interaction options to use
+     * @return {AnnotationElement[]} - elements that are found (only 1 element)
+     */
+    nearest(state, event, options) {
+      return getNearestItem(state, event, options);
+    },
+    /**
+     * x mode returns the elements that hit-test at the current x coordinate
+     * @param {Object} state - the state of the plugin
+     * @param {ChartEvent} event - the event we are find things at
+     * @param {Object} options - interaction options to use
+     * @return {AnnotationElement[]} - elements that are found
+     */
+    x(state, event, options) {
+      return filterElements(state, event, {intersect: options.intersect, axis: 'x'});
+    },
+
+    /**
+     * y mode returns the elements that hit-test at the current y coordinate
+     * @param {Object} state - the state of the plugin
+     * @param {ChartEvent} event - the event we are find things at
+     * @param {Object} options - interaction options to use
+     * @return {AnnotationElement[]} - elements that are found
+     */
+    y(state, event, options) {
+      return filterElements(state, event, {intersect: options.intersect, axis: 'y'});
+    }
+  }
+};
+
+/**
+ * Returns all elements that hit test based on the event position
+ * @param {Object} state - the state of the plugin
+ * @param {ChartEvent} event - the event we are find things at
+ * @param {Object} options - interaction options to use
+ * @return {AnnotationElement[]} - elements that are found
+ */
+function getElements(state, event, options) {
+  const mode = interaction.modes[options.mode] || interaction.modes.nearest;
+  return mode(state, event, options);
+}
+
+function inRangeByAxis(element, event, axis) {
+  if (axis !== 'x' && axis !== 'y') {
+    return element.inRange(event.x, event.y, 'x', true) || element.inRange(event.x, event.y, 'y', true);
+  }
+  return element.inRange(event.x, event.y, axis, true);
+}
+
+function getPointByAxis(event, center, axis) {
+  if (axis === 'x') {
+    return {x: event.x, y: center.y};
+  } else if (axis === 'y') {
+    return {x: center.x, y: event.y};
+  }
+  return center;
+}
+
+function filterElements(state, event, options) {
+  return state.visibleElements.filter((element) => options.intersect ? element.inRange(event.x, event.y) : inRangeByAxis(element, event, options.axis));
+}
+
+function getNearestItem(state, event, options) {
+  let minDistance = Number.POSITIVE_INFINITY;
+
+  return filterElements(state, event, options)
+    .reduce((nearestItems, element) => {
+      const center = element.getCenterPoint();
+      const evenPoint = getPointByAxis(event, center, options.axis);
+      const distance = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.aE)(event, evenPoint);
+      if (distance < minDistance) {
+        nearestItems = [element];
+        minDistance = distance;
+      } else if (distance === minDistance) {
+        // Can have multiple items at the same distance in which case we sort by size
+        nearestItems.push(element);
+      }
+
+      return nearestItems;
+    }, [])
+    .sort((a, b) => a._index - b._index)
+    .slice(0, 1); // return only the top item;
+}
+
+const isOlderPart = (act, req) => req > act || (act.length > req.length && act.slice(0, req.length) === req);
+
+/**
+ * @typedef { import('chart.js').Point } Point
+ * @typedef { import('chart.js').InteractionAxis } InteractionAxis
+ * @typedef { import('../../types/element').AnnotationElement } AnnotationElement
+ */
+
+const EPSILON = 0.001;
+const clamp = (x, from, to) => Math.min(to, Math.max(from, x));
+
+/**
+ * @param {Object} obj
+ * @param {number} from
+ * @param {number} to
+ * @returns {Object}
+ */
+function clampAll(obj, from, to) {
+  for (const key of Object.keys(obj)) {
+    obj[key] = clamp(obj[key], from, to);
+  }
+  return obj;
+}
+
+/**
+ * @param {Point} point
+ * @param {Point} center
+ * @param {number} radius
+ * @param {number} borderWidth
+ * @returns {boolean}
+ */
+function inPointRange(point, center, radius, borderWidth) {
+  if (!point || !center || radius <= 0) {
+    return false;
+  }
+  const hBorderWidth = borderWidth / 2;
+  return (Math.pow(point.x - center.x, 2) + Math.pow(point.y - center.y, 2)) <= Math.pow(radius + hBorderWidth, 2);
+}
+
+/**
+ * @param {Point} point
+ * @param {{x: number, y: number, x2: number, y2: number}} rect
+ * @param {InteractionAxis} axis
+ * @param {number} borderWidth
+ * @returns {boolean}
+ */
+function inBoxRange(point, {x, y, x2, y2}, axis, borderWidth) {
+  const hBorderWidth = borderWidth / 2;
+  const inRangeX = point.x >= x - hBorderWidth - EPSILON && point.x <= x2 + hBorderWidth + EPSILON;
+  const inRangeY = point.y >= y - hBorderWidth - EPSILON && point.y <= y2 + hBorderWidth + EPSILON;
+  if (axis === 'x') {
+    return inRangeX;
+  } else if (axis === 'y') {
+    return inRangeY;
+  }
+  return inRangeX && inRangeY;
+}
+
+/**
+ * @param {AnnotationElement} element
+ * @param {boolean} useFinalPosition
+ * @returns {Point}
+ */
+function getElementCenterPoint(element, useFinalPosition) {
+  const {centerX, centerY} = element.getProps(['centerX', 'centerY'], useFinalPosition);
+  return {x: centerX, y: centerY};
+}
+
+/**
+ * @param {string} pkg
+ * @param {string} min
+ * @param {string} ver
+ * @param {boolean} [strict=true]
+ * @returns {boolean}
+ */
+function requireVersion(pkg, min, ver, strict = true) {
+  const parts = ver.split('.');
+  let i = 0;
+  for (const req of min.split('.')) {
+    const act = parts[i++];
+    if (parseInt(req, 10) < parseInt(act, 10)) {
+      break;
+    }
+    if (isOlderPart(act, req)) {
+      if (strict) {
+        throw new Error(`${pkg} v${ver} is not supported. v${min} or newer is required.`);
+      } else {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+const isPercentString = (s) => typeof s === 'string' && s.endsWith('%');
+const toPercent = (s) => parseFloat(s) / 100;
+const toPositivePercent = (s) => clamp(toPercent(s), 0, 1);
+
+const boxAppering = (x, y) => ({x, y, x2: x, y2: y, width: 0, height: 0});
+const defaultInitAnimation = {
+  box: (properties) => boxAppering(properties.centerX, properties.centerY),
+  ellipse: (properties) => ({centerX: properties.centerX, centerY: properties.centerX, radius: 0, width: 0, height: 0}),
+  label: (properties) => boxAppering(properties.centerX, properties.centerY),
+  line: (properties) => boxAppering(properties.x, properties.y),
+  point: (properties) => ({centerX: properties.centerX, centerY: properties.centerY, radius: 0, width: 0, height: 0}),
+  polygon: (properties) => boxAppering(properties.centerX, properties.centerY)
+};
+
+/**
+ * @typedef { import("chart.js").Chart } Chart
+ * @typedef { import('../../types/element').AnnotationBoxModel } AnnotationBoxModel
+ * @typedef { import('../../types/element').AnnotationElement } AnnotationElement
+ * @typedef { import('../../types/options').AnnotationPointCoordinates } AnnotationPointCoordinates
+ * @typedef { import('../../types/label').CoreLabelOptions } CoreLabelOptions
+ * @typedef { import('../../types/label').LabelPositionObject } LabelPositionObject
+ */
+
+/**
+ * @param {number} size
+ * @param {number|string} position
+ * @returns {number}
+ */
+function getRelativePosition(size, position) {
+  if (position === 'start') {
+    return 0;
+  }
+  if (position === 'end') {
+    return size;
+  }
+  if (isPercentString(position)) {
+    return toPositivePercent(position) * size;
+  }
+  return size / 2;
+}
+
+/**
+ * @param {number} size
+ * @param {number|string} value
+ * @param {boolean} [positivePercent=true]
+ * @returns {number}
+ */
+function getSize(size, value, positivePercent = true) {
+  if (typeof value === 'number') {
+    return value;
+  } else if (isPercentString(value)) {
+    return (positivePercent ? toPositivePercent(value) : toPercent(value)) * size;
+  }
+  return size;
+}
+
+/**
+ * @param {{x: number, width: number}} size
+ * @param {CoreLabelOptions} options
+ * @returns {number}
+ */
+function calculateTextAlignment(size, options) {
+  const {x, width} = size;
+  const textAlign = options.textAlign;
+  if (textAlign === 'center') {
+    return x + width / 2;
+  } else if (textAlign === 'end' || textAlign === 'right') {
+    return x + width;
+  }
+  return x;
+}
+
+/**
+ * @param {{x: number|string, y: number|string}|string|number} value
+ * @param {string|number} defaultValue
+ * @returns {{x: number|string, y: number|string}}
+ */
+function toPosition(value, defaultValue = 'center') {
+  if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.i)(value)) {
+    return {
+      x: (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.v)(value.x, defaultValue),
+      y: (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.v)(value.y, defaultValue),
+    };
+  }
+  value = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.v)(value, defaultValue);
+  return {
+    x: value,
+    y: value
+  };
+}
+
+/**
+ * @param {AnnotationPointCoordinates} options
+ * @returns {boolean}
+ */
+function isBoundToPoint(options) {
+  return options && ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(options.xValue) || (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(options.yValue));
+}
+
+/**
+ * @param {Chart} chart
+ * @param {AnnotationBoxModel} properties
+ * @param {CoreAnnotationOptions} options
+ * @returns {AnnotationElement}
+ */
+function initAnimationProperties(chart, properties, options) {
+  const initAnim = options.init;
+  if (!initAnim) {
+    return;
+  } else if (initAnim === true) {
+    return applyDefault(properties, options);
+  }
+  return execCallback(chart, properties, options);
+}
+
+/**
+ * @param {Object} options
+ * @param {Array} hooks
+ * @param {Object} hooksContainer
+ * @returns {boolean}
+ */
+function loadHooks(options, hooks, hooksContainer) {
+  let activated = false;
+  hooks.forEach(hook => {
+    if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a7)(options[hook])) {
+      activated = true;
+      hooksContainer[hook] = options[hook];
+    } else if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(hooksContainer[hook])) {
+      delete hooksContainer[hook];
+    }
+  });
+  return activated;
+}
+
+function applyDefault(properties, options) {
+  const type = options.type || 'line';
+  return defaultInitAnimation[type](properties);
+}
+
+function execCallback(chart, properties, options) {
+  const result = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.Q)(options.init, [{chart, properties, options}]);
+  if (result === true) {
+    return applyDefault(properties, options);
+  } else if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.i)(result)) {
+    return result;
+  }
+}
+
+const widthCache = new Map();
+const notRadius = (radius) => isNaN(radius) || radius <= 0;
+const fontsKey = (fonts) => fonts.reduce(function(prev, item) {
+  prev += item.string;
+  return prev;
+}, '');
+
+/**
+ * @typedef { import('chart.js').Point } Point
+ * @typedef { import('../../types/label').CoreLabelOptions } CoreLabelOptions
+ * @typedef { import('../../types/options').PointAnnotationOptions } PointAnnotationOptions
+ */
+
+/**
+ * Determine if content is an image or a canvas.
+ * @param {*} content
+ * @returns boolean|undefined
+ * @todo move this function to chart.js helpers
+ */
+function isImageOrCanvas(content) {
+  if (content && typeof content === 'object') {
+    const type = content.toString();
+    return (type === '[object HTMLImageElement]' || type === '[object HTMLCanvasElement]');
+  }
+}
+
+/**
+ * Set the translation on the canvas if the rotation must be applied.
+ * @param {CanvasRenderingContext2D} ctx - chart canvas context
+ * @param {Point} point - the point of translation
+ * @param {number} rotation - rotation (in degrees) to apply
+ */
+function translate(ctx, {x, y}, rotation) {
+  if (rotation) {
+    ctx.translate(x, y);
+    ctx.rotate((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(rotation));
+    ctx.translate(-x, -y);
+  }
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} options
+ * @returns {boolean|undefined}
+ */
+function setBorderStyle(ctx, options) {
+  if (options && options.borderWidth) {
+    ctx.lineCap = options.borderCapStyle;
+    ctx.setLineDash(options.borderDash);
+    ctx.lineDashOffset = options.borderDashOffset;
+    ctx.lineJoin = options.borderJoinStyle;
+    ctx.lineWidth = options.borderWidth;
+    ctx.strokeStyle = options.borderColor;
+    return true;
+  }
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} options
+ */
+function setShadowStyle(ctx, options) {
+  ctx.shadowColor = options.backgroundShadowColor;
+  ctx.shadowBlur = options.shadowBlur;
+  ctx.shadowOffsetX = options.shadowOffsetX;
+  ctx.shadowOffsetY = options.shadowOffsetY;
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {CoreLabelOptions} options
+ * @returns {{width: number, height: number}}
+ */
+function measureLabelSize(ctx, options) {
+  const content = options.content;
+  if (isImageOrCanvas(content)) {
+    return {
+      width: getSize(content.width, options.width),
+      height: getSize(content.height, options.height)
+    };
+  }
+  const optFont = options.font;
+  const fonts = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(optFont) ? optFont.map(f => (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a0)(f)) : [(0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a0)(optFont)];
+  const strokeWidth = options.textStrokeWidth;
+  const lines = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(content) ? content : [content];
+  const mapKey = lines.join() + fontsKey(fonts) + strokeWidth + (ctx._measureText ? '-spriting' : '');
+  if (!widthCache.has(mapKey)) {
+    widthCache.set(mapKey, calculateLabelSize(ctx, lines, fonts, strokeWidth));
+  }
+  return widthCache.get(mapKey);
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{x: number, y: number, width: number, height: number}} rect
+ * @param {Object} options
+ */
+function drawBox(ctx, rect, options) {
+  const {x, y, width, height} = rect;
+  ctx.save();
+  setShadowStyle(ctx, options);
+  const stroke = setBorderStyle(ctx, options);
+  ctx.fillStyle = options.backgroundColor;
+  ctx.beginPath();
+  (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.au)(ctx, {
+    x, y, w: width, h: height,
+    radius: clampAll((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.aw)(options.borderRadius), 0, Math.min(width, height) / 2)
+  });
+  ctx.closePath();
+  ctx.fill();
+  if (stroke) {
+    ctx.shadowColor = options.borderShadowColor;
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{x: number, y: number, width: number, height: number}} rect
+ * @param {CoreLabelOptions} options
+ */
+function drawLabel(ctx, rect, options) {
+  const content = options.content;
+  if (isImageOrCanvas(content)) {
+    ctx.save();
+    ctx.globalAlpha = getOpacity(options.opacity, content.style.opacity);
+    ctx.drawImage(content, rect.x, rect.y, rect.width, rect.height);
+    ctx.restore();
+    return;
+  }
+  const labels = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(content) ? content : [content];
+  const optFont = options.font;
+  const fonts = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(optFont) ? optFont.map(f => (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a0)(f)) : [(0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a0)(optFont)];
+  const optColor = options.color;
+  const colors = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(optColor) ? optColor : [optColor];
+  const x = calculateTextAlignment(rect, options);
+  const y = rect.y + options.textStrokeWidth / 2;
+  ctx.save();
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = options.textAlign;
+  if (setTextStrokeStyle(ctx, options)) {
+    applyLabelDecoration(ctx, {x, y}, labels, fonts);
+  }
+  applyLabelContent(ctx, {x, y}, labels, {fonts, colors});
+  ctx.restore();
+}
+
+function setTextStrokeStyle(ctx, options) {
+  if (options.textStrokeWidth > 0) {
+    // https://stackoverflow.com/questions/13627111/drawing-text-with-an-outer-stroke-with-html5s-canvas
+    ctx.lineJoin = 'round';
+    ctx.miterLimit = 2;
+    ctx.lineWidth = options.textStrokeWidth;
+    ctx.strokeStyle = options.textStrokeColor;
+    return true;
+  }
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{radius: number, options: PointAnnotationOptions}} element
+ * @param {number} x
+ * @param {number} y
+ */
+function drawPoint(ctx, element, x, y) {
+  const {radius, options} = element;
+  const style = options.pointStyle;
+  const rotation = options.rotation;
+  let rad = (rotation || 0) * chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b3;
+
+  if (isImageOrCanvas(style)) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rad);
+    ctx.drawImage(style, -style.width / 2, -style.height / 2, style.width, style.height);
+    ctx.restore();
+    return;
+  }
+  if (notRadius(radius)) {
+    return;
+  }
+  drawPointStyle(ctx, {x, y, radius, rotation, style, rad});
+}
+
+function drawPointStyle(ctx, {x, y, radius, rotation, style, rad}) {
+  let xOffset, yOffset, size, cornerRadius;
+  ctx.beginPath();
+
+  switch (style) {
+  // Default includes circle
+  default:
+    ctx.arc(x, y, radius, 0, chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.T);
+    ctx.closePath();
+    break;
+  case 'triangle':
+    ctx.moveTo(x + Math.sin(rad) * radius, y - Math.cos(rad) * radius);
+    rad += chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b5;
+    ctx.lineTo(x + Math.sin(rad) * radius, y - Math.cos(rad) * radius);
+    rad += chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b5;
+    ctx.lineTo(x + Math.sin(rad) * radius, y - Math.cos(rad) * radius);
+    ctx.closePath();
+    break;
+  case 'rectRounded':
+    // NOTE: the rounded rect implementation changed to use `arc` instead of
+    // `quadraticCurveTo` since it generates better results when rect is
+    // almost a circle. 0.516 (instead of 0.5) produces results with visually
+    // closer proportion to the previous impl and it is inscribed in the
+    // circle with `radius`. For more details, see the following PRs:
+    // https://github.com/chartjs/Chart.js/issues/5597
+    // https://github.com/chartjs/Chart.js/issues/5858
+    cornerRadius = radius * 0.516;
+    size = radius - cornerRadius;
+    xOffset = Math.cos(rad + chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b4) * size;
+    yOffset = Math.sin(rad + chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b4) * size;
+    ctx.arc(x - xOffset, y - yOffset, cornerRadius, rad - chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P, rad - chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.H);
+    ctx.arc(x + yOffset, y - xOffset, cornerRadius, rad - chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.H, rad);
+    ctx.arc(x + xOffset, y + yOffset, cornerRadius, rad, rad + chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.H);
+    ctx.arc(x - yOffset, y + xOffset, cornerRadius, rad + chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.H, rad + chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P);
+    ctx.closePath();
+    break;
+  case 'rect':
+    if (!rotation) {
+      size = Math.SQRT1_2 * radius;
+      ctx.rect(x - size, y - size, 2 * size, 2 * size);
+      break;
+    }
+    rad += chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b4;
+    /* falls through */
+  case 'rectRot':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    ctx.closePath();
+    break;
+  case 'crossRot':
+    rad += chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b4;
+    /* falls through */
+  case 'cross':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.moveTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    break;
+  case 'star':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.moveTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    rad += chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b4;
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.moveTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    break;
+  case 'line':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    break;
+  case 'dash':
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(rad) * radius, y + Math.sin(rad) * radius);
+    break;
+  }
+
+  ctx.fill();
+}
+
+function calculateLabelSize(ctx, lines, fonts, strokeWidth) {
+  ctx.save();
+  const count = lines.length;
+  let width = 0;
+  let height = strokeWidth;
+  for (let i = 0; i < count; i++) {
+    const font = fonts[Math.min(i, fonts.length - 1)];
+    ctx.font = font.string;
+    const text = lines[i];
+    width = Math.max(width, ctx.measureText(text).width + strokeWidth);
+    height += font.lineHeight;
+  }
+  ctx.restore();
+  return {width, height};
+}
+
+function applyLabelDecoration(ctx, {x, y}, labels, fonts) {
+  ctx.beginPath();
+  let lhs = 0;
+  labels.forEach(function(l, i) {
+    const f = fonts[Math.min(i, fonts.length - 1)];
+    const lh = f.lineHeight;
+    ctx.font = f.string;
+    ctx.strokeText(l, x, y + lh / 2 + lhs);
+    lhs += lh;
+  });
+  ctx.stroke();
+}
+
+function applyLabelContent(ctx, {x, y}, labels, {fonts, colors}) {
+  let lhs = 0;
+  labels.forEach(function(l, i) {
+    const c = colors[Math.min(i, colors.length - 1)];
+    const f = fonts[Math.min(i, fonts.length - 1)];
+    const lh = f.lineHeight;
+    ctx.beginPath();
+    ctx.font = f.string;
+    ctx.fillStyle = c;
+    ctx.fillText(l, x, y + lh / 2 + lhs);
+    lhs += lh;
+    ctx.fill();
+  });
+}
+
+function getOpacity(value, elementValue) {
+  const opacity = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.x)(value) ? value : elementValue;
+  return (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.x)(opacity) ? clamp(opacity, 0, 1) : 1;
+}
+
+const limitedLineScale = {
+  xScaleID: {min: 'xMin', max: 'xMax', start: 'left', end: 'right', startProp: 'x', endProp: 'x2'},
+  yScaleID: {min: 'yMin', max: 'yMax', start: 'bottom', end: 'top', startProp: 'y', endProp: 'y2'}
+};
+
+/**
+ * @typedef { import("chart.js").Chart } Chart
+ * @typedef { import("chart.js").Scale } Scale
+ * @typedef { import("chart.js").Point } Point
+ * @typedef { import('../../types/element').AnnotationBoxModel } AnnotationBoxModel
+ * @typedef { import('../../types/options').CoreAnnotationOptions } CoreAnnotationOptions
+ * @typedef { import('../../types/options').LineAnnotationOptions } LineAnnotationOptions
+ * @typedef { import('../../types/options').PointAnnotationOptions } PointAnnotationOptions
+ * @typedef { import('../../types/options').PolygonAnnotationOptions } PolygonAnnotationOptions
+ */
+
+/**
+ * @param {Scale} scale
+ * @param {number|string} value
+ * @param {number} fallback
+ * @returns {number}
+ */
+function scaleValue(scale, value, fallback) {
+  value = typeof value === 'number' ? value : scale.parse(value);
+  return (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.g)(value) ? scale.getPixelForValue(value) : fallback;
+}
+
+/**
+ * Search the scale defined in chartjs by the axis related to the annotation options key.
+ * @param {{ [key: string]: Scale }} scales
+ * @param {CoreAnnotationOptions} options
+ * @param {string} key
+ * @returns {string}
+ */
+function retrieveScaleID(scales, options, key) {
+  const scaleID = options[key];
+  if (scaleID || key === 'scaleID') {
+    return scaleID;
+  }
+  const axis = key.charAt(0);
+  const axes = Object.values(scales).filter((scale) => scale.axis && scale.axis === axis);
+  if (axes.length) {
+    return axes[0].id;
+  }
+  return axis;
+}
+
+/**
+ * @param {Scale} scale
+ * @param {{min: number, max: number, start: number, end: number}} options
+ * @returns {{start: number, end: number}|undefined}
+ */
+function getDimensionByScale(scale, options) {
+  if (scale) {
+    const reverse = scale.options.reverse;
+    const start = scaleValue(scale, options.min, reverse ? options.end : options.start);
+    const end = scaleValue(scale, options.max, reverse ? options.start : options.end);
+    return {
+      start,
+      end
+    };
+  }
+}
+
+/**
+ * @param {Chart} chart
+ * @param {CoreAnnotationOptions} options
+ * @returns {Point}
+ */
+function getChartPoint(chart, options) {
+  const {chartArea, scales} = chart;
+  const xScale = scales[retrieveScaleID(scales, options, 'xScaleID')];
+  const yScale = scales[retrieveScaleID(scales, options, 'yScaleID')];
+  let x = chartArea.width / 2;
+  let y = chartArea.height / 2;
+
+  if (xScale) {
+    x = scaleValue(xScale, options.xValue, xScale.left + xScale.width / 2);
+  }
+
+  if (yScale) {
+    y = scaleValue(yScale, options.yValue, yScale.top + yScale.height / 2);
+  }
+  return {x, y};
+}
+
+/**
+ * @param {Chart} chart
+ * @param {CoreAnnotationOptions} options
+ * @returns {AnnotationBoxModel}
+ */
+function resolveBoxProperties(chart, options) {
+  const scales = chart.scales;
+  const xScale = scales[retrieveScaleID(scales, options, 'xScaleID')];
+  const yScale = scales[retrieveScaleID(scales, options, 'yScaleID')];
+
+  if (!xScale && !yScale) {
+    return {};
+  }
+
+  let {left: x, right: x2} = xScale || chart.chartArea;
+  let {top: y, bottom: y2} = yScale || chart.chartArea;
+  const xDim = getChartDimensionByScale(xScale, {min: options.xMin, max: options.xMax, start: x, end: x2});
+  x = xDim.start;
+  x2 = xDim.end;
+  const yDim = getChartDimensionByScale(yScale, {min: options.yMin, max: options.yMax, start: y2, end: y});
+  y = yDim.start;
+  y2 = yDim.end;
+
+  return {
+    x,
+    y,
+    x2,
+    y2,
+    width: x2 - x,
+    height: y2 - y,
+    centerX: x + (x2 - x) / 2,
+    centerY: y + (y2 - y) / 2
+  };
+}
+
+/**
+ * @param {Chart} chart
+ * @param {PointAnnotationOptions|PolygonAnnotationOptions} options
+ * @returns {AnnotationBoxModel}
+ */
+function resolvePointProperties(chart, options) {
+  if (!isBoundToPoint(options)) {
+    const box = resolveBoxProperties(chart, options);
+    let radius = options.radius;
+    if (!radius || isNaN(radius)) {
+      radius = Math.min(box.width, box.height) / 2;
+      options.radius = radius;
+    }
+    const size = radius * 2;
+    const adjustCenterX = box.centerX + options.xAdjust;
+    const adjustCenterY = box.centerY + options.yAdjust;
+    return {
+      x: adjustCenterX - radius,
+      y: adjustCenterY - radius,
+      x2: adjustCenterX + radius,
+      y2: adjustCenterY + radius,
+      centerX: adjustCenterX,
+      centerY: adjustCenterY,
+      width: size,
+      height: size,
+      radius
+    };
+  }
+  return getChartCircle(chart, options);
+}
+/**
+ * @param {Chart} chart
+ * @param {LineAnnotationOptions} options
+ * @returns {AnnotationBoxModel}
+ */
+function resolveLineProperties(chart, options) {
+  const {scales, chartArea} = chart;
+  const scale = scales[options.scaleID];
+  const area = {x: chartArea.left, y: chartArea.top, x2: chartArea.right, y2: chartArea.bottom};
+
+  if (scale) {
+    resolveFullLineProperties(scale, area, options);
+  } else {
+    resolveLimitedLineProperties(scales, area, options);
+  }
+  return area;
+}
+
+/**
+ * @param {Chart} chart
+ * @param {CoreAnnotationOptions} options
+ * @param {boolean} [centerBased=false]
+ * @returns {AnnotationBoxModel}
+ */
+function resolveBoxAndLabelProperties(chart, options) {
+  const properties = resolveBoxProperties(chart, options);
+  properties.initProperties = initAnimationProperties(chart, properties, options);
+  properties.elements = [{
+    type: 'label',
+    optionScope: 'label',
+    properties: resolveLabelElementProperties$1(chart, properties, options),
+    initProperties: properties.initProperties
+  }];
+  return properties;
+}
+
+function getChartCircle(chart, options) {
+  const point = getChartPoint(chart, options);
+  const size = options.radius * 2;
+  return {
+    x: point.x - options.radius + options.xAdjust,
+    y: point.y - options.radius + options.yAdjust,
+    x2: point.x + options.radius + options.xAdjust,
+    y2: point.y + options.radius + options.yAdjust,
+    centerX: point.x + options.xAdjust,
+    centerY: point.y + options.yAdjust,
+    radius: options.radius,
+    width: size,
+    height: size
+  };
+}
+
+function getChartDimensionByScale(scale, options) {
+  const result = getDimensionByScale(scale, options) || options;
+  return {
+    start: Math.min(result.start, result.end),
+    end: Math.max(result.start, result.end)
+  };
+}
+
+function resolveFullLineProperties(scale, area, options) {
+  const min = scaleValue(scale, options.value, NaN);
+  const max = scaleValue(scale, options.endValue, min);
+  if (scale.isHorizontal()) {
+    area.x = min;
+    area.x2 = max;
+  } else {
+    area.y = min;
+    area.y2 = max;
+  }
+}
+
+function resolveLimitedLineProperties(scales, area, options) {
+  for (const scaleId of Object.keys(limitedLineScale)) {
+    const scale = scales[retrieveScaleID(scales, options, scaleId)];
+    if (scale) {
+      const {min, max, start, end, startProp, endProp} = limitedLineScale[scaleId];
+      const dim = getDimensionByScale(scale, {min: options[min], max: options[max], start: scale[start], end: scale[end]});
+      area[startProp] = dim.start;
+      area[endProp] = dim.end;
+    }
+  }
+}
+
+function calculateX({properties, options}, labelSize, position, padding) {
+  const {x: start, x2: end, width: size} = properties;
+  return calculatePosition$1({start, end, size, borderWidth: options.borderWidth}, {
+    position: position.x,
+    padding: {start: padding.left, end: padding.right},
+    adjust: options.label.xAdjust,
+    size: labelSize.width
+  });
+}
+
+function calculateY({properties, options}, labelSize, position, padding) {
+  const {y: start, y2: end, height: size} = properties;
+  return calculatePosition$1({start, end, size, borderWidth: options.borderWidth}, {
+    position: position.y,
+    padding: {start: padding.top, end: padding.bottom},
+    adjust: options.label.yAdjust,
+    size: labelSize.height
+  });
+}
+
+function calculatePosition$1(boxOpts, labelOpts) {
+  const {start, end, borderWidth} = boxOpts;
+  const {position, padding: {start: padStart, end: padEnd}, adjust} = labelOpts;
+  const availableSize = end - borderWidth - start - padStart - padEnd - labelOpts.size;
+  return start + borderWidth / 2 + adjust + getRelativePosition(availableSize, position);
+}
+
+function resolveLabelElementProperties$1(chart, properties, options) {
+  const label = options.label;
+  label.backgroundColor = 'transparent';
+  label.callout.display = false;
+  const position = toPosition(label.position);
+  const padding = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.E)(label.padding);
+  const labelSize = measureLabelSize(chart.ctx, label);
+  const x = calculateX({properties, options}, labelSize, position, padding);
+  const y = calculateY({properties, options}, labelSize, position, padding);
+  const width = labelSize.width + padding.width;
+  const height = labelSize.height + padding.height;
+  return {
+    x,
+    y,
+    x2: x + width,
+    y2: y + height,
+    width,
+    height,
+    centerX: x + width / 2,
+    centerY: y + height / 2,
+    rotation: label.rotation
+  };
+
+}
+
+/**
+ * @typedef {import('chart.js').Point} Point
+ */
+
+/**
+ * Rotate a `point` relative to `center` point by `angle`
+ * @param {Point} point - the point to rotate
+ * @param {Point} center - center point for rotation
+ * @param {number} angle - angle for rotation, in radians
+ * @returns {Point} rotated point
+ */
+function rotated(point, center, angle) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  const cx = center.x;
+  const cy = center.y;
+
+  return {
+    x: cx + cos * (point.x - cx) - sin * (point.y - cy),
+    y: cy + sin * (point.x - cx) + cos * (point.y - cy)
+  };
+}
+
+const moveHooks = ['enter', 'leave'];
+
+/**
+ * @typedef { import("chart.js").Chart } Chart
+ * @typedef { import('../../types/options').AnnotationPluginOptions } AnnotationPluginOptions
+ */
+
+const eventHooks = moveHooks.concat('click');
+
+/**
+ * @param {Chart} chart
+ * @param {Object} state
+ * @param {AnnotationPluginOptions} options
+ */
+function updateListeners(chart, state, options) {
+  state.listened = loadHooks(options, eventHooks, state.listeners);
+  state.moveListened = false;
+  state._getElements = getElements; // for testing
+
+  moveHooks.forEach(hook => {
+    if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a7)(options[hook])) {
+      state.moveListened = true;
+    }
+  });
+
+  if (!state.listened || !state.moveListened) {
+    state.annotations.forEach(scope => {
+      if (!state.listened && (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a7)(scope.click)) {
+        state.listened = true;
+      }
+      if (!state.moveListened) {
+        moveHooks.forEach(hook => {
+          if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a7)(scope[hook])) {
+            state.listened = true;
+            state.moveListened = true;
+          }
+        });
+      }
+    });
+  }
+}
+
+/**
+ * @param {Object} state
+ * @param {ChartEvent} event
+ * @param {AnnotationPluginOptions} options
+ * @return {boolean|undefined}
+ */
+function handleEvent(state, event, options) {
+  if (state.listened) {
+    switch (event.type) {
+    case 'mousemove':
+    case 'mouseout':
+      return handleMoveEvents(state, event, options);
+    case 'click':
+      return handleClickEvents(state, event, options);
+    }
+  }
+}
+
+function handleMoveEvents(state, event, options) {
+  if (!state.moveListened) {
+    return;
+  }
+
+  let elements;
+
+  if (event.type === 'mousemove') {
+    elements = getElements(state, event, options.interaction);
+  } else {
+    elements = [];
+  }
+
+  const previous = state.hovered;
+  state.hovered = elements;
+
+  const context = {state, event};
+  let changed = dispatchMoveEvents(context, 'leave', previous, elements);
+  return dispatchMoveEvents(context, 'enter', elements, previous) || changed;
+}
+
+function dispatchMoveEvents({state, event}, hook, elements, checkElements) {
+  let changed;
+  for (const element of elements) {
+    if (checkElements.indexOf(element) < 0) {
+      changed = dispatchEvent(element.options[hook] || state.listeners[hook], element, event) || changed;
+    }
+  }
+  return changed;
+}
+
+function handleClickEvents(state, event, options) {
+  const listeners = state.listeners;
+  const elements = getElements(state, event, options.interaction);
+  let changed;
+  for (const element of elements) {
+    changed = dispatchEvent(element.options.click || listeners.click, element, event) || changed;
+  }
+  return changed;
+}
+
+function dispatchEvent(handler, element, event) {
+  return (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.Q)(handler, [element.$context, event]) === true;
+}
+
+/**
+ * @typedef { import("chart.js").Chart } Chart
+ * @typedef { import('../../types/options').AnnotationPluginOptions } AnnotationPluginOptions
+ * @typedef { import('../../types/element').AnnotationElement } AnnotationElement
+ */
+
+const elementHooks = ['afterDraw', 'beforeDraw'];
+
+/**
+ * @param {Chart} chart
+ * @param {Object} state
+ * @param {AnnotationPluginOptions} options
+ */
+function updateHooks(chart, state, options) {
+  const visibleElements = state.visibleElements;
+  state.hooked = loadHooks(options, elementHooks, state.hooks);
+
+  if (!state.hooked) {
+    visibleElements.forEach(scope => {
+      if (!state.hooked) {
+        elementHooks.forEach(hook => {
+          if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a7)(scope.options[hook])) {
+            state.hooked = true;
+          }
+        });
+      }
+    });
+  }
+}
+
+/**
+ * @param {Object} state
+ * @param {AnnotationElement} element
+ * @param {string} hook
+ */
+function invokeHook(state, element, hook) {
+  if (state.hooked) {
+    const callbackHook = element.options[hook] || state.hooks[hook];
+    return (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.Q)(callbackHook, [element.$context]);
+  }
+}
+
+/**
+ * @typedef { import("chart.js").Chart } Chart
+ * @typedef { import("chart.js").Scale } Scale
+ * @typedef { import('../../types/options').CoreAnnotationOptions } CoreAnnotationOptions
+ */
+
+/**
+ * @param {Chart} chart
+ * @param {Scale} scale
+ * @param {CoreAnnotationOptions[]} annotations
+ */
+function adjustScaleRange(chart, scale, annotations) {
+  const range = getScaleLimits(chart.scales, scale, annotations);
+  let changed = changeScaleLimit(scale, range, 'min', 'suggestedMin');
+  changed = changeScaleLimit(scale, range, 'max', 'suggestedMax') || changed;
+  if (changed && (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.a7)(scale.handleTickRangeOptions)) {
+    scale.handleTickRangeOptions();
+  }
+}
+
+/**
+ * @param {CoreAnnotationOptions[]} annotations
+ * @param {{ [key: string]: Scale }} scales
+ */
+function verifyScaleOptions(annotations, scales) {
+  for (const annotation of annotations) {
+    verifyScaleIDs(annotation, scales);
+  }
+}
+
+function changeScaleLimit(scale, range, limit, suggestedLimit) {
+  if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.g)(range[limit]) && !scaleLimitDefined(scale.options, limit, suggestedLimit)) {
+    const changed = scale[limit] !== range[limit];
+    scale[limit] = range[limit];
+    return changed;
+  }
+}
+
+function scaleLimitDefined(scaleOptions, limit, suggestedLimit) {
+  return (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(scaleOptions[limit]) || (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(scaleOptions[suggestedLimit]);
+}
+
+function verifyScaleIDs(annotation, scales) {
+  for (const key of ['scaleID', 'xScaleID', 'yScaleID']) {
+    const scaleID = retrieveScaleID(scales, annotation, key);
+    if (scaleID && !scales[scaleID] && verifyProperties(annotation, key)) {
+      console.warn(`No scale found with id '${scaleID}' for annotation '${annotation.id}'`);
+    }
+  }
+}
+
+function verifyProperties(annotation, key) {
+  if (key === 'scaleID') {
+    return true;
+  }
+  const axis = key.charAt(0);
+  for (const prop of ['Min', 'Max', 'Value']) {
+    if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(annotation[axis + prop])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getScaleLimits(scales, scale, annotations) {
+  const axis = scale.axis;
+  const scaleID = scale.id;
+  const scaleIDOption = axis + 'ScaleID';
+  const limits = {
+    min: (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.v)(scale.min, Number.NEGATIVE_INFINITY),
+    max: (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.v)(scale.max, Number.POSITIVE_INFINITY)
+  };
+  for (const annotation of annotations) {
+    if (annotation.scaleID === scaleID) {
+      updateLimits(annotation, scale, ['value', 'endValue'], limits);
+    } else if (retrieveScaleID(scales, annotation, scaleIDOption) === scaleID) {
+      updateLimits(annotation, scale, [axis + 'Min', axis + 'Max', axis + 'Value'], limits);
+    }
+  }
+  return limits;
+}
+
+function updateLimits(annotation, scale, props, limits) {
+  for (const prop of props) {
+    const raw = annotation[prop];
+    if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(raw)) {
+      const value = scale.parse(raw);
+      limits.min = Math.min(limits.min, value);
+      limits.max = Math.max(limits.max, value);
+    }
+  }
+}
+
+class BoxAnnotation extends chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Element */ .W_ {
+
+  inRange(mouseX, mouseY, axis, useFinalPosition) {
+    const {x, y} = rotated({x: mouseX, y: mouseY}, this.getCenterPoint(useFinalPosition), (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(-this.options.rotation));
+    return inBoxRange({x, y}, this.getProps(['x', 'y', 'x2', 'y2'], useFinalPosition), axis, this.options.borderWidth);
+  }
+
+  getCenterPoint(useFinalPosition) {
+    return getElementCenterPoint(this, useFinalPosition);
+  }
+
+  draw(ctx) {
+    ctx.save();
+    translate(ctx, this.getCenterPoint(), this.options.rotation);
+    drawBox(ctx, this, this.options);
+    ctx.restore();
+  }
+
+  get label() {
+    return this.elements && this.elements[0];
+  }
+
+  resolveElementProperties(chart, options) {
+    return resolveBoxAndLabelProperties(chart, options);
+  }
+}
+
+BoxAnnotation.id = 'boxAnnotation';
+
+BoxAnnotation.defaults = {
+  adjustScaleRange: true,
+  backgroundShadowColor: 'transparent',
+  borderCapStyle: 'butt',
+  borderDash: [],
+  borderDashOffset: 0,
+  borderJoinStyle: 'miter',
+  borderRadius: 0,
+  borderShadowColor: 'transparent',
+  borderWidth: 1,
+  display: true,
+  init: undefined,
+  label: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    callout: {
+      display: false
+    },
+    color: 'black',
+    content: null,
+    display: false,
+    drawTime: undefined,
+    font: {
+      family: undefined,
+      lineHeight: undefined,
+      size: undefined,
+      style: undefined,
+      weight: 'bold'
+    },
+    height: undefined,
+    opacity: undefined,
+    padding: 6,
+    position: 'center',
+    rotation: undefined,
+    textAlign: 'start',
+    textStrokeColor: undefined,
+    textStrokeWidth: 0,
+    width: undefined,
+    xAdjust: 0,
+    yAdjust: 0,
+    z: undefined
+  },
+  rotation: 0,
+  shadowBlur: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  xMax: undefined,
+  xMin: undefined,
+  xScaleID: undefined,
+  yMax: undefined,
+  yMin: undefined,
+  yScaleID: undefined,
+  z: 0
+};
+
+BoxAnnotation.defaultRoutes = {
+  borderColor: 'color',
+  backgroundColor: 'color'
+};
+
+BoxAnnotation.descriptors = {
+  label: {
+    _fallback: true
+  }
+};
+
+const positions = ['left', 'bottom', 'top', 'right'];
+
+class LabelAnnotation extends chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Element */ .W_ {
+
+  inRange(mouseX, mouseY, axis, useFinalPosition) {
+    const {x, y} = rotated({x: mouseX, y: mouseY}, this.getCenterPoint(useFinalPosition), (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(-this.rotation));
+    return inBoxRange({x, y}, this.getProps(['x', 'y', 'x2', 'y2'], useFinalPosition), axis, this.options.borderWidth);
+  }
+
+  getCenterPoint(useFinalPosition) {
+    return getElementCenterPoint(this, useFinalPosition);
+  }
+
+  draw(ctx) {
+    const options = this.options;
+    const visible = !(0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(this._visible) || this._visible;
+    if (!options.display || !options.content || !visible) {
+      return;
+    }
+    ctx.save();
+    translate(ctx, this.getCenterPoint(), this.rotation);
+    drawCallout(ctx, this);
+    drawBox(ctx, this, options);
+    drawLabel(ctx, getLabelSize(this), options);
+    ctx.restore();
+  }
+
+  resolveElementProperties(chart, options) {
+    let point;
+    if (!isBoundToPoint(options)) {
+      const {centerX, centerY} = resolveBoxProperties(chart, options);
+      point = {x: centerX, y: centerY};
+    } else {
+      point = getChartPoint(chart, options);
+    }
+    const padding = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+    const labelSize = measureLabelSize(chart.ctx, options);
+    const boxSize = measureRect(point, labelSize, options, padding);
+    return {
+      initProperties: initAnimationProperties(chart, boxSize, options),
+      pointX: point.x,
+      pointY: point.y,
+      ...boxSize,
+      rotation: options.rotation
+    };
+  }
+}
+
+LabelAnnotation.id = 'labelAnnotation';
+
+LabelAnnotation.defaults = {
+  adjustScaleRange: true,
+  backgroundColor: 'transparent',
+  backgroundShadowColor: 'transparent',
+  borderCapStyle: 'butt',
+  borderDash: [],
+  borderDashOffset: 0,
+  borderJoinStyle: 'miter',
+  borderRadius: 0,
+  borderShadowColor: 'transparent',
+  borderWidth: 0,
+  callout: {
+    borderCapStyle: 'butt',
+    borderColor: undefined,
+    borderDash: [],
+    borderDashOffset: 0,
+    borderJoinStyle: 'miter',
+    borderWidth: 1,
+    display: false,
+    margin: 5,
+    position: 'auto',
+    side: 5,
+    start: '50%',
+  },
+  color: 'black',
+  content: null,
+  display: true,
+  font: {
+    family: undefined,
+    lineHeight: undefined,
+    size: undefined,
+    style: undefined,
+    weight: undefined
+  },
+  height: undefined,
+  init: undefined,
+  opacity: undefined,
+  padding: 6,
+  position: 'center',
+  rotation: 0,
+  shadowBlur: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  textAlign: 'center',
+  textStrokeColor: undefined,
+  textStrokeWidth: 0,
+  width: undefined,
+  xAdjust: 0,
+  xMax: undefined,
+  xMin: undefined,
+  xScaleID: undefined,
+  xValue: undefined,
+  yAdjust: 0,
+  yMax: undefined,
+  yMin: undefined,
+  yScaleID: undefined,
+  yValue: undefined,
+  z: 0
+};
+
+LabelAnnotation.defaultRoutes = {
+  borderColor: 'color'
+};
+
+function measureRect(point, size, options, padding) {
+  const width = size.width + padding.width + options.borderWidth;
+  const height = size.height + padding.height + options.borderWidth;
+  const position = toPosition(options.position, 'center');
+  const x = calculatePosition(point.x, width, options.xAdjust, position.x);
+  const y = calculatePosition(point.y, height, options.yAdjust, position.y);
+
+  return {
+    x,
+    y,
+    x2: x + width,
+    y2: y + height,
+    width,
+    height,
+    centerX: x + width / 2,
+    centerY: y + height / 2
+  };
+}
+
+function calculatePosition(start, size, adjust = 0, position) {
+  return start - getRelativePosition(size, position) + adjust;
+}
+
+function drawCallout(ctx, element) {
+  const {pointX, pointY, options} = element;
+  const callout = options.callout;
+  const calloutPosition = callout && callout.display && resolveCalloutPosition(element, callout);
+  if (!calloutPosition || isPointInRange(element, callout, calloutPosition)) {
+    return;
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  const stroke = setBorderStyle(ctx, callout);
+  if (!stroke) {
+    return ctx.restore();
+  }
+  const {separatorStart, separatorEnd} = getCalloutSeparatorCoord(element, calloutPosition);
+  const {sideStart, sideEnd} = getCalloutSideCoord(element, calloutPosition, separatorStart);
+  if (callout.margin > 0 || options.borderWidth === 0) {
+    ctx.moveTo(separatorStart.x, separatorStart.y);
+    ctx.lineTo(separatorEnd.x, separatorEnd.y);
+  }
+  ctx.moveTo(sideStart.x, sideStart.y);
+  ctx.lineTo(sideEnd.x, sideEnd.y);
+  const rotatedPoint = rotated({x: pointX, y: pointY}, element.getCenterPoint(), (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(-element.rotation));
+  ctx.lineTo(rotatedPoint.x, rotatedPoint.y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function getCalloutSeparatorCoord(element, position) {
+  const {x, y, x2, y2} = element;
+  const adjust = getCalloutSeparatorAdjust(element, position);
+  let separatorStart, separatorEnd;
+  if (position === 'left' || position === 'right') {
+    separatorStart = {x: x + adjust, y};
+    separatorEnd = {x: separatorStart.x, y: y2};
+  } else {
+    //  position 'top' or 'bottom'
+    separatorStart = {x, y: y + adjust};
+    separatorEnd = {x: x2, y: separatorStart.y};
+  }
+  return {separatorStart, separatorEnd};
+}
+
+function getCalloutSeparatorAdjust(element, position) {
+  const {width, height, options} = element;
+  const adjust = options.callout.margin + options.borderWidth / 2;
+  if (position === 'right') {
+    return width + adjust;
+  } else if (position === 'bottom') {
+    return height + adjust;
+  }
+  return -adjust;
+}
+
+function getCalloutSideCoord(element, position, separatorStart) {
+  const {y, width, height, options} = element;
+  const start = options.callout.start;
+  const side = getCalloutSideAdjust(position, options.callout);
+  let sideStart, sideEnd;
+  if (position === 'left' || position === 'right') {
+    sideStart = {x: separatorStart.x, y: y + getSize(height, start)};
+    sideEnd = {x: sideStart.x + side, y: sideStart.y};
+  } else {
+    //  position 'top' or 'bottom'
+    sideStart = {x: separatorStart.x + getSize(width, start), y: separatorStart.y};
+    sideEnd = {x: sideStart.x, y: sideStart.y + side};
+  }
+  return {sideStart, sideEnd};
+}
+
+function getCalloutSideAdjust(position, options) {
+  const side = options.side;
+  if (position === 'left' || position === 'top') {
+    return -side;
+  }
+  return side;
+}
+
+function resolveCalloutPosition(element, options) {
+  const position = options.position;
+  if (positions.includes(position)) {
+    return position;
+  }
+  return resolveCalloutAutoPosition(element, options);
+}
+
+function resolveCalloutAutoPosition(element, options) {
+  const {x, y, x2, y2, width, height, pointX, pointY, centerX, centerY, rotation} = element;
+  const center = {x: centerX, y: centerY};
+  const start = options.start;
+  const xAdjust = getSize(width, start);
+  const yAdjust = getSize(height, start);
+  const xPoints = [x, x + xAdjust, x + xAdjust, x2];
+  const yPoints = [y + yAdjust, y2, y, y2];
+  const result = [];
+  for (let index = 0; index < 4; index++) {
+    const rotatedPoint = rotated({x: xPoints[index], y: yPoints[index]}, center, (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(rotation));
+    result.push({
+      position: positions[index],
+      distance: (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.aE)(rotatedPoint, {x: pointX, y: pointY})
+    });
+  }
+  return result.sort((a, b) => a.distance - b.distance)[0].position;
+}
+
+function getLabelSize({x, y, width, height, options}) {
+  const hBorderWidth = options.borderWidth / 2;
+  const padding = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+  return {
+    x: x + padding.left + hBorderWidth,
+    y: y + padding.top + hBorderWidth,
+    width: width - padding.left - padding.right - options.borderWidth,
+    height: height - padding.top - padding.bottom - options.borderWidth
+  };
+}
+
+function isPointInRange(element, callout, position) {
+  const {pointX, pointY} = element;
+  const margin = callout.margin;
+  let x = pointX;
+  let y = pointY;
+  if (position === 'left') {
+    x += margin;
+  } else if (position === 'right') {
+    x -= margin;
+  } else if (position === 'top') {
+    y += margin;
+  } else if (position === 'bottom') {
+    y -= margin;
+  }
+  return element.inRange(x, y);
+}
+
+const pointInLine = (p1, p2, t) => ({x: p1.x + t * (p2.x - p1.x), y: p1.y + t * (p2.y - p1.y)});
+const interpolateX = (y, p1, p2) => pointInLine(p1, p2, Math.abs((y - p1.y) / (p2.y - p1.y))).x;
+const interpolateY = (x, p1, p2) => pointInLine(p1, p2, Math.abs((x - p1.x) / (p2.x - p1.x))).y;
+const sqr = v => v * v;
+const rangeLimit = (mouseX, mouseY, {x, y, x2, y2}, axis) => axis === 'y' ? {start: Math.min(y, y2), end: Math.max(y, y2), value: mouseY} : {start: Math.min(x, x2), end: Math.max(x, x2), value: mouseX};
+// http://www.independent-software.com/determining-coordinates-on-a-html-canvas-bezier-curve.html
+const coordInCurve = (start, cp, end, t) => (1 - t) * (1 - t) * start + 2 * (1 - t) * t * cp + t * t * end;
+const pointInCurve = (start, cp, end, t) => ({x: coordInCurve(start.x, cp.x, end.x, t), y: coordInCurve(start.y, cp.y, end.y, t)});
+const coordAngleInCurve = (start, cp, end, t) => 2 * (1 - t) * (cp - start) + 2 * t * (end - cp);
+const angleInCurve = (start, cp, end, t) => -Math.atan2(coordAngleInCurve(start.x, cp.x, end.x, t), coordAngleInCurve(start.y, cp.y, end.y, t)) + 0.5 * chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P;
+
+class LineAnnotation extends chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Element */ .W_ {
+
+  inRange(mouseX, mouseY, axis, useFinalPosition) {
+    const hBorderWidth = this.options.borderWidth / 2;
+    if (axis !== 'x' && axis !== 'y') {
+      const point = {mouseX, mouseY};
+      const {path, ctx} = this;
+      if (path) {
+        setBorderStyle(ctx, this.options);
+        const {chart} = this.$context;
+        const mx = mouseX * chart.currentDevicePixelRatio;
+        const my = mouseY * chart.currentDevicePixelRatio;
+        const result = ctx.isPointInStroke(path, mx, my) || isOnLabel(this, point, useFinalPosition);
+        ctx.restore();
+        return result;
+      }
+      const epsilon = sqr(hBorderWidth);
+      return intersects(this, point, epsilon, useFinalPosition) || isOnLabel(this, point, useFinalPosition);
+    }
+    return inAxisRange(this, {mouseX, mouseY}, axis, {hBorderWidth, useFinalPosition});
+  }
+
+  getCenterPoint(useFinalPosition) {
+    return getElementCenterPoint(this, useFinalPosition);
+  }
+
+  draw(ctx) {
+    const {x, y, x2, y2, cp, options} = this;
+
+    ctx.save();
+    if (!setBorderStyle(ctx, options)) {
+      // no border width, then line is not drawn
+      return ctx.restore();
+    }
+    setShadowStyle(ctx, options);
+
+    const length = Math.sqrt(Math.pow(x2 - x, 2) + Math.pow(y2 - y, 2));
+    if (options.curve && cp) {
+      drawCurve(ctx, this, cp, length);
+      return ctx.restore();
+    }
+    const {startOpts, endOpts, startAdjust, endAdjust} = getArrowHeads(this);
+    const angle = Math.atan2(y2 - y, x2 - x);
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(0 + startAdjust, 0);
+    ctx.lineTo(length - endAdjust, 0);
+    ctx.shadowColor = options.borderShadowColor;
+    ctx.stroke();
+    drawArrowHead(ctx, 0, startAdjust, startOpts);
+    drawArrowHead(ctx, length, -endAdjust, endOpts);
+    ctx.restore();
+  }
+
+  get label() {
+    return this.elements && this.elements[0];
+  }
+
+  resolveElementProperties(chart, options) {
+    const area = resolveLineProperties(chart, options);
+    const {x, y, x2, y2} = area;
+    const inside = isLineInArea(area, chart.chartArea);
+    const properties = inside
+      ? limitLineToArea({x, y}, {x: x2, y: y2}, chart.chartArea)
+      : {x, y, x2, y2, width: Math.abs(x2 - x), height: Math.abs(y2 - y)};
+    properties.centerX = (x2 + x) / 2;
+    properties.centerY = (y2 + y) / 2;
+    properties.initProperties = initAnimationProperties(chart, properties, options);
+    if (options.curve) {
+      const p1 = {x: properties.x, y: properties.y};
+      const p2 = {x: properties.x2, y: properties.y2};
+      properties.cp = getControlPoint(properties, options, (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.aE)(p1, p2));
+    }
+    const labelProperties = resolveLabelElementProperties(chart, properties, options.label);
+    // additonal prop to manage zoom/pan
+    labelProperties._visible = inside;
+
+    properties.elements = [{
+      type: 'label',
+      optionScope: 'label',
+      properties: labelProperties,
+      initProperties: properties.initProperties
+    }];
+    return properties;
+  }
+}
+
+LineAnnotation.id = 'lineAnnotation';
+
+const arrowHeadsDefaults = {
+  backgroundColor: undefined,
+  backgroundShadowColor: undefined,
+  borderColor: undefined,
+  borderDash: undefined,
+  borderDashOffset: undefined,
+  borderShadowColor: undefined,
+  borderWidth: undefined,
+  display: undefined,
+  fill: undefined,
+  length: undefined,
+  shadowBlur: undefined,
+  shadowOffsetX: undefined,
+  shadowOffsetY: undefined,
+  width: undefined
+};
+
+LineAnnotation.defaults = {
+  adjustScaleRange: true,
+  arrowHeads: {
+    display: false,
+    end: Object.assign({}, arrowHeadsDefaults),
+    fill: false,
+    length: 12,
+    start: Object.assign({}, arrowHeadsDefaults),
+    width: 6
+  },
+  borderDash: [],
+  borderDashOffset: 0,
+  borderShadowColor: 'transparent',
+  borderWidth: 2,
+  curve: false,
+  controlPoint: {
+    y: '-50%'
+  },
+  display: true,
+  endValue: undefined,
+  init: undefined,
+  label: {
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    backgroundShadowColor: 'transparent',
+    borderCapStyle: 'butt',
+    borderColor: 'black',
+    borderDash: [],
+    borderDashOffset: 0,
+    borderJoinStyle: 'miter',
+    borderRadius: 6,
+    borderShadowColor: 'transparent',
+    borderWidth: 0,
+    callout: Object.assign({}, LabelAnnotation.defaults.callout),
+    color: '#fff',
+    content: null,
+    display: false,
+    drawTime: undefined,
+    font: {
+      family: undefined,
+      lineHeight: undefined,
+      size: undefined,
+      style: undefined,
+      weight: 'bold'
+    },
+    height: undefined,
+    opacity: undefined,
+    padding: 6,
+    position: 'center',
+    rotation: 0,
+    shadowBlur: 0,
+    shadowOffsetX: 0,
+    shadowOffsetY: 0,
+    textAlign: 'center',
+    textStrokeColor: undefined,
+    textStrokeWidth: 0,
+    width: undefined,
+    xAdjust: 0,
+    yAdjust: 0,
+    z: undefined
+  },
+  scaleID: undefined,
+  shadowBlur: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  value: undefined,
+  xMax: undefined,
+  xMin: undefined,
+  xScaleID: undefined,
+  yMax: undefined,
+  yMin: undefined,
+  yScaleID: undefined,
+  z: 0
+};
+
+LineAnnotation.descriptors = {
+  arrowHeads: {
+    start: {
+      _fallback: true
+    },
+    end: {
+      _fallback: true
+    },
+    _fallback: true
+  }
+};
+
+LineAnnotation.defaultRoutes = {
+  borderColor: 'color'
+};
+
+function inAxisRange(element, {mouseX, mouseY}, axis, {hBorderWidth, useFinalPosition}) {
+  const limit = rangeLimit(mouseX, mouseY, element.getProps(['x', 'y', 'x2', 'y2'], useFinalPosition), axis);
+  return (limit.value >= limit.start - hBorderWidth && limit.value <= limit.end + hBorderWidth) || isOnLabel(element, {mouseX, mouseY}, useFinalPosition, axis);
+}
+
+function isLineInArea({x, y, x2, y2}, {top, right, bottom, left}) {
+  return !(
+    (x < left && x2 < left) ||
+    (x > right && x2 > right) ||
+    (y < top && y2 < top) ||
+    (y > bottom && y2 > bottom)
+  );
+}
+
+function limitPointToArea({x, y}, p2, {top, right, bottom, left}) {
+  if (x < left) {
+    y = interpolateY(left, {x, y}, p2);
+    x = left;
+  }
+  if (x > right) {
+    y = interpolateY(right, {x, y}, p2);
+    x = right;
+  }
+  if (y < top) {
+    x = interpolateX(top, {x, y}, p2);
+    y = top;
+  }
+  if (y > bottom) {
+    x = interpolateX(bottom, {x, y}, p2);
+    y = bottom;
+  }
+  return {x, y};
+}
+
+function limitLineToArea(p1, p2, area) {
+  const {x, y} = limitPointToArea(p1, p2, area);
+  const {x: x2, y: y2} = limitPointToArea(p2, p1, area);
+  return {x, y, x2, y2, width: Math.abs(x2 - x), height: Math.abs(y2 - y)};
+}
+
+function intersects(element, {mouseX, mouseY}, epsilon = EPSILON, useFinalPosition) {
+  // Adapted from https://stackoverflow.com/a/6853926/25507
+  const {x: x1, y: y1, x2, y2} = element.getProps(['x', 'y', 'x2', 'y2'], useFinalPosition);
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lenSq = sqr(dx) + sqr(dy);
+  const t = lenSq === 0 ? -1 : ((mouseX - x1) * dx + (mouseY - y1) * dy) / lenSq;
+  let xx, yy;
+  if (t < 0) {
+    xx = x1;
+    yy = y1;
+  } else if (t > 1) {
+    xx = x2;
+    yy = y2;
+  } else {
+    xx = x1 + t * dx;
+    yy = y1 + t * dy;
+  }
+  return (sqr(mouseX - xx) + sqr(mouseY - yy)) <= epsilon;
+}
+
+function isOnLabel(element, {mouseX, mouseY}, useFinalPosition, axis) {
+  const label = element.label;
+  return label.options.display && label.inRange(mouseX, mouseY, axis, useFinalPosition);
+}
+
+function resolveLabelElementProperties(chart, properties, options) {
+  const borderWidth = options.borderWidth;
+  const padding = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+  const textSize = measureLabelSize(chart.ctx, options);
+  const width = textSize.width + padding.width + borderWidth;
+  const height = textSize.height + padding.height + borderWidth;
+  return calculateLabelPosition(properties, options, {width, height, padding}, chart.chartArea);
+}
+
+function calculateAutoRotation(properties) {
+  const {x, y, x2, y2} = properties;
+  const rotation = Math.atan2(y2 - y, x2 - x);
+  // Flip the rotation if it goes > PI/2 or < -PI/2, so label stays upright
+  return rotation > chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P / 2 ? rotation - chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P : rotation < chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P / -2 ? rotation + chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P : rotation;
+}
+
+function calculateLabelPosition(properties, label, sizes, chartArea) {
+  const {width, height, padding} = sizes;
+  const {xAdjust, yAdjust} = label;
+  const p1 = {x: properties.x, y: properties.y};
+  const p2 = {x: properties.x2, y: properties.y2};
+  const rotation = label.rotation === 'auto' ? calculateAutoRotation(properties) : (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(label.rotation);
+  const size = rotatedSize(width, height, rotation);
+  const t = calculateT(properties, label, {labelSize: size, padding}, chartArea);
+  const pt = properties.cp ? pointInCurve(p1, properties.cp, p2, t) : pointInLine(p1, p2, t);
+  const xCoordinateSizes = {size: size.w, min: chartArea.left, max: chartArea.right, padding: padding.left};
+  const yCoordinateSizes = {size: size.h, min: chartArea.top, max: chartArea.bottom, padding: padding.top};
+  const centerX = adjustLabelCoordinate(pt.x, xCoordinateSizes) + xAdjust;
+  const centerY = adjustLabelCoordinate(pt.y, yCoordinateSizes) + yAdjust;
+  return {
+    x: centerX - (width / 2),
+    y: centerY - (height / 2),
+    x2: centerX + (width / 2),
+    y2: centerY + (height / 2),
+    centerX,
+    centerY,
+    pointX: pt.x,
+    pointY: pt.y,
+    width,
+    height,
+    rotation: (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.U)(rotation)
+  };
+}
+
+function rotatedSize(width, height, rotation) {
+  const cos = Math.cos(rotation);
+  const sin = Math.sin(rotation);
+  return {
+    w: Math.abs(width * cos) + Math.abs(height * sin),
+    h: Math.abs(width * sin) + Math.abs(height * cos)
+  };
+}
+
+function calculateT(properties, label, sizes, chartArea) {
+  let t;
+  const space = spaceAround(properties, chartArea);
+  if (label.position === 'start') {
+    t = calculateTAdjust({w: properties.x2 - properties.x, h: properties.y2 - properties.y}, sizes, label, space);
+  } else if (label.position === 'end') {
+    t = 1 - calculateTAdjust({w: properties.x - properties.x2, h: properties.y - properties.y2}, sizes, label, space);
+  } else {
+    t = getRelativePosition(1, label.position);
+  }
+  return t;
+}
+
+function calculateTAdjust(lineSize, sizes, label, space) {
+  const {labelSize, padding} = sizes;
+  const lineW = lineSize.w * space.dx;
+  const lineH = lineSize.h * space.dy;
+  const x = (lineW > 0) && ((labelSize.w / 2 + padding.left - space.x) / lineW);
+  const y = (lineH > 0) && ((labelSize.h / 2 + padding.top - space.y) / lineH);
+  return clamp(Math.max(x, y), 0, 0.25);
+}
+
+function spaceAround(properties, chartArea) {
+  const {x, x2, y, y2} = properties;
+  const t = Math.min(y, y2) - chartArea.top;
+  const l = Math.min(x, x2) - chartArea.left;
+  const b = chartArea.bottom - Math.max(y, y2);
+  const r = chartArea.right - Math.max(x, x2);
+  return {
+    x: Math.min(l, r),
+    y: Math.min(t, b),
+    dx: l <= r ? 1 : -1,
+    dy: t <= b ? 1 : -1
+  };
+}
+
+function adjustLabelCoordinate(coordinate, labelSizes) {
+  const {size, min, max, padding} = labelSizes;
+  const halfSize = size / 2;
+  if (size > max - min) {
+    // if it does not fit, display as much as possible
+    return (max + min) / 2;
+  }
+  if (min >= (coordinate - padding - halfSize)) {
+    coordinate = min + padding + halfSize;
+  }
+  if (max <= (coordinate + padding + halfSize)) {
+    coordinate = max - padding - halfSize;
+  }
+  return coordinate;
+}
+
+function getArrowHeads(line) {
+  const options = line.options;
+  const arrowStartOpts = options.arrowHeads && options.arrowHeads.start;
+  const arrowEndOpts = options.arrowHeads && options.arrowHeads.end;
+  return {
+    startOpts: arrowStartOpts,
+    endOpts: arrowEndOpts,
+    startAdjust: getLineAdjust(line, arrowStartOpts),
+    endAdjust: getLineAdjust(line, arrowEndOpts)
+  };
+}
+
+function getLineAdjust(line, arrowOpts) {
+  if (!arrowOpts || !arrowOpts.display) {
+    return 0;
+  }
+  const {length, width} = arrowOpts;
+  const adjust = line.options.borderWidth / 2;
+  const p1 = {x: length, y: width + adjust};
+  const p2 = {x: 0, y: adjust};
+  return Math.abs(interpolateX(0, p1, p2));
+}
+
+function drawArrowHead(ctx, offset, adjust, arrowOpts) {
+  if (!arrowOpts || !arrowOpts.display) {
+    return;
+  }
+  const {length, width, fill, backgroundColor, borderColor} = arrowOpts;
+  const arrowOffsetX = Math.abs(offset - length) + adjust;
+  ctx.beginPath();
+  setShadowStyle(ctx, arrowOpts);
+  setBorderStyle(ctx, arrowOpts);
+  ctx.moveTo(arrowOffsetX, -width);
+  ctx.lineTo(offset + adjust, 0);
+  ctx.lineTo(arrowOffsetX, width);
+  if (fill === true) {
+    ctx.fillStyle = backgroundColor || borderColor;
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+  } else {
+    ctx.shadowColor = arrowOpts.borderShadowColor;
+  }
+  ctx.stroke();
+}
+
+function getControlPoint(properties, options, distance) {
+  const {x, y, x2, y2, centerX, centerY} = properties;
+  const angle = Math.atan2(y2 - y, x2 - x);
+  const cp = toPosition(options.controlPoint, 0);
+  const point = {
+    x: centerX + getSize(distance, cp.x, false),
+    y: centerY + getSize(distance, cp.y, false)
+  };
+  return rotated(point, {x: centerX, y: centerY}, angle);
+}
+
+function drawArrowHeadOnCurve(ctx, {x, y}, {angle, adjust}, arrowOpts) {
+  if (!arrowOpts || !arrowOpts.display) {
+    return;
+  }
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  drawArrowHead(ctx, 0, -adjust, arrowOpts);
+  ctx.restore();
+}
+
+function drawCurve(ctx, element, cp, length) {
+  const {x, y, x2, y2, options} = element;
+  const {startOpts, endOpts, startAdjust, endAdjust} = getArrowHeads(element);
+  const p1 = {x, y};
+  const p2 = {x: x2, y: y2};
+  const startAngle = angleInCurve(p1, cp, p2, 0);
+  const endAngle = angleInCurve(p1, cp, p2, 1) - chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P;
+  const ps = pointInCurve(p1, cp, p2, startAdjust / length);
+  const pe = pointInCurve(p1, cp, p2, 1 - endAdjust / length);
+
+  const path = new Path2D();
+  ctx.beginPath();
+  path.moveTo(ps.x, ps.y);
+  path.quadraticCurveTo(cp.x, cp.y, pe.x, pe.y);
+  ctx.shadowColor = options.borderShadowColor;
+  ctx.stroke(path);
+  element.path = path;
+  element.ctx = ctx;
+  drawArrowHeadOnCurve(ctx, ps, {angle: startAngle, adjust: startAdjust}, startOpts);
+  drawArrowHeadOnCurve(ctx, pe, {angle: endAngle, adjust: endAdjust}, endOpts);
+}
+
+class EllipseAnnotation extends chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Element */ .W_ {
+
+  inRange(mouseX, mouseY, axis, useFinalPosition) {
+    const rotation = this.options.rotation;
+    const borderWidth = this.options.borderWidth;
+    if (axis !== 'x' && axis !== 'y') {
+      return pointInEllipse({x: mouseX, y: mouseY}, this.getProps(['width', 'height', 'centerX', 'centerY'], useFinalPosition), rotation, borderWidth);
+    }
+    const {x, y, x2, y2} = this.getProps(['x', 'y', 'x2', 'y2'], useFinalPosition);
+    const hBorderWidth = borderWidth / 2;
+    const limit = axis === 'y' ? {start: y, end: y2} : {start: x, end: x2};
+    const rotatedPoint = rotated({x: mouseX, y: mouseY}, this.getCenterPoint(useFinalPosition), (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(-rotation));
+    return rotatedPoint[axis] >= limit.start - hBorderWidth - EPSILON && rotatedPoint[axis] <= limit.end + hBorderWidth + EPSILON;
+  }
+
+  getCenterPoint(useFinalPosition) {
+    return getElementCenterPoint(this, useFinalPosition);
+  }
+
+  draw(ctx) {
+    const {width, height, centerX, centerY, options} = this;
+    ctx.save();
+    translate(ctx, this.getCenterPoint(), options.rotation);
+    setShadowStyle(ctx, this.options);
+    ctx.beginPath();
+    ctx.fillStyle = options.backgroundColor;
+    const stroke = setBorderStyle(ctx, options);
+    ctx.ellipse(centerX, centerY, height / 2, width / 2, chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P / 2, 0, 2 * chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P);
+    ctx.fill();
+    if (stroke) {
+      ctx.shadowColor = options.borderShadowColor;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  get label() {
+    return this.elements && this.elements[0];
+  }
+
+  resolveElementProperties(chart, options) {
+    return resolveBoxAndLabelProperties(chart, options);
+  }
+
+}
+
+EllipseAnnotation.id = 'ellipseAnnotation';
+
+EllipseAnnotation.defaults = {
+  adjustScaleRange: true,
+  backgroundShadowColor: 'transparent',
+  borderDash: [],
+  borderDashOffset: 0,
+  borderShadowColor: 'transparent',
+  borderWidth: 1,
+  display: true,
+  init: undefined,
+  label: Object.assign({}, BoxAnnotation.defaults.label),
+  rotation: 0,
+  shadowBlur: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  xMax: undefined,
+  xMin: undefined,
+  xScaleID: undefined,
+  yMax: undefined,
+  yMin: undefined,
+  yScaleID: undefined,
+  z: 0
+};
+
+EllipseAnnotation.defaultRoutes = {
+  borderColor: 'color',
+  backgroundColor: 'color'
+};
+
+EllipseAnnotation.descriptors = {
+  label: {
+    _fallback: true
+  }
+};
+
+function pointInEllipse(p, ellipse, rotation, borderWidth) {
+  const {width, height, centerX, centerY} = ellipse;
+  const xRadius = width / 2;
+  const yRadius = height / 2;
+
+  if (xRadius <= 0 || yRadius <= 0) {
+    return false;
+  }
+  // https://stackoverflow.com/questions/7946187/point-and-ellipse-rotated-position-test-algorithm
+  const angle = (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(rotation || 0);
+  const hBorderWidth = borderWidth / 2 || 0;
+  const cosAngle = Math.cos(angle);
+  const sinAngle = Math.sin(angle);
+  const a = Math.pow(cosAngle * (p.x - centerX) + sinAngle * (p.y - centerY), 2);
+  const b = Math.pow(sinAngle * (p.x - centerX) - cosAngle * (p.y - centerY), 2);
+  return (a / Math.pow(xRadius + hBorderWidth, 2)) + (b / Math.pow(yRadius + hBorderWidth, 2)) <= 1.0001;
+}
+
+class PointAnnotation extends chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Element */ .W_ {
+
+  inRange(mouseX, mouseY, axis, useFinalPosition) {
+    const {x, y, x2, y2, width} = this.getProps(['x', 'y', 'x2', 'y2', 'width'], useFinalPosition);
+    const borderWidth = this.options.borderWidth;
+    if (axis !== 'x' && axis !== 'y') {
+      return inPointRange({x: mouseX, y: mouseY}, this.getCenterPoint(useFinalPosition), width / 2, borderWidth);
+    }
+    const hBorderWidth = borderWidth / 2;
+    const limit = axis === 'y' ? {start: y, end: y2, value: mouseY} : {start: x, end: x2, value: mouseX};
+    return limit.value >= limit.start - hBorderWidth && limit.value <= limit.end + hBorderWidth;
+  }
+
+  getCenterPoint(useFinalPosition) {
+    return getElementCenterPoint(this, useFinalPosition);
+  }
+
+  draw(ctx) {
+    const options = this.options;
+    const borderWidth = options.borderWidth;
+    if (options.radius < 0.1) {
+      return;
+    }
+    ctx.save();
+    ctx.fillStyle = options.backgroundColor;
+    setShadowStyle(ctx, options);
+    const stroke = setBorderStyle(ctx, options);
+    drawPoint(ctx, this, this.centerX, this.centerY);
+    if (stroke && !isImageOrCanvas(options.pointStyle)) {
+      ctx.shadowColor = options.borderShadowColor;
+      ctx.stroke();
+    }
+    ctx.restore();
+    options.borderWidth = borderWidth;
+  }
+
+  resolveElementProperties(chart, options) {
+    const properties = resolvePointProperties(chart, options);
+    properties.initProperties = initAnimationProperties(chart, properties, options);
+    return properties;
+  }
+}
+
+PointAnnotation.id = 'pointAnnotation';
+
+PointAnnotation.defaults = {
+  adjustScaleRange: true,
+  backgroundShadowColor: 'transparent',
+  borderDash: [],
+  borderDashOffset: 0,
+  borderShadowColor: 'transparent',
+  borderWidth: 1,
+  display: true,
+  init: undefined,
+  pointStyle: 'circle',
+  radius: 10,
+  rotation: 0,
+  shadowBlur: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  xAdjust: 0,
+  xMax: undefined,
+  xMin: undefined,
+  xScaleID: undefined,
+  xValue: undefined,
+  yAdjust: 0,
+  yMax: undefined,
+  yMin: undefined,
+  yScaleID: undefined,
+  yValue: undefined,
+  z: 0
+};
+
+PointAnnotation.defaultRoutes = {
+  borderColor: 'color',
+  backgroundColor: 'color'
+};
+
+class PolygonAnnotation extends chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Element */ .W_ {
+
+  inRange(mouseX, mouseY, axis, useFinalPosition) {
+    if (axis !== 'x' && axis !== 'y') {
+      return this.options.radius >= 0.1 && this.elements.length > 1 && pointIsInPolygon(this.elements, mouseX, mouseY, useFinalPosition);
+    }
+    const rotatedPoint = rotated({x: mouseX, y: mouseY}, this.getCenterPoint(useFinalPosition), (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.t)(-this.options.rotation));
+    const axisPoints = this.elements.map((point) => axis === 'y' ? point.bY : point.bX);
+    const start = Math.min(...axisPoints);
+    const end = Math.max(...axisPoints);
+    return rotatedPoint[axis] >= start && rotatedPoint[axis] <= end;
+  }
+
+  getCenterPoint(useFinalPosition) {
+    return getElementCenterPoint(this, useFinalPosition);
+  }
+
+  draw(ctx) {
+    const {elements, options} = this;
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle = options.backgroundColor;
+    setShadowStyle(ctx, options);
+    const stroke = setBorderStyle(ctx, options);
+    let first = true;
+    for (const el of elements) {
+      if (first) {
+        ctx.moveTo(el.x, el.y);
+        first = false;
+      } else {
+        ctx.lineTo(el.x, el.y);
+      }
+    }
+    ctx.closePath();
+    ctx.fill();
+    // If no border, don't draw it
+    if (stroke) {
+      ctx.shadowColor = options.borderShadowColor;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  resolveElementProperties(chart, options) {
+    const properties = resolvePointProperties(chart, options);
+    const {sides, rotation} = options;
+    const elements = [];
+    const angle = (2 * chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.P) / sides;
+    let rad = rotation * chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b3;
+    for (let i = 0; i < sides; i++, rad += angle) {
+      const elProps = buildPointElement(properties, options, rad);
+      elProps.initProperties = initAnimationProperties(chart, properties, options);
+      elements.push(elProps);
+    }
+    properties.elements = elements;
+    return properties;
+  }
+}
+
+PolygonAnnotation.id = 'polygonAnnotation';
+
+PolygonAnnotation.defaults = {
+  adjustScaleRange: true,
+  backgroundShadowColor: 'transparent',
+  borderCapStyle: 'butt',
+  borderDash: [],
+  borderDashOffset: 0,
+  borderJoinStyle: 'miter',
+  borderShadowColor: 'transparent',
+  borderWidth: 1,
+  display: true,
+  init: undefined,
+  point: {
+    radius: 0
+  },
+  radius: 10,
+  rotation: 0,
+  shadowBlur: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  sides: 3,
+  xAdjust: 0,
+  xMax: undefined,
+  xMin: undefined,
+  xScaleID: undefined,
+  xValue: undefined,
+  yAdjust: 0,
+  yMax: undefined,
+  yMin: undefined,
+  yScaleID: undefined,
+  yValue: undefined,
+  z: 0
+};
+
+PolygonAnnotation.defaultRoutes = {
+  borderColor: 'color',
+  backgroundColor: 'color'
+};
+
+function buildPointElement({centerX, centerY}, {radius, borderWidth}, rad) {
+  const halfBorder = borderWidth / 2;
+  const sin = Math.sin(rad);
+  const cos = Math.cos(rad);
+  const point = {x: centerX + sin * radius, y: centerY - cos * radius};
+  return {
+    type: 'point',
+    optionScope: 'point',
+    properties: {
+      x: point.x,
+      y: point.y,
+      centerX: point.x,
+      centerY: point.y,
+      bX: centerX + sin * (radius + halfBorder),
+      bY: centerY - cos * (radius + halfBorder)
+    }
+  };
+}
+
+function pointIsInPolygon(points, x, y, useFinalPosition) {
+  let isInside = false;
+  let A = points[points.length - 1].getProps(['bX', 'bY'], useFinalPosition);
+  for (const point of points) {
+    const B = point.getProps(['bX', 'bY'], useFinalPosition);
+    if ((B.bY > y) !== (A.bY > y) && x < (A.bX - B.bX) * (y - B.bY) / (A.bY - B.bY) + B.bX) {
+      isInside = !isInside;
+    }
+    A = B;
+  }
+  return isInside;
+}
+
+const annotationTypes = {
+  box: BoxAnnotation,
+  ellipse: EllipseAnnotation,
+  label: LabelAnnotation,
+  line: LineAnnotation,
+  point: PointAnnotation,
+  polygon: PolygonAnnotation
+};
+
+/**
+ * Register fallback for annotation elements
+ * For example lineAnnotation options would be looked through:
+ * - the annotation object (options.plugins.annotation.annotations[id])
+ * - element options (options.elements.lineAnnotation)
+ * - element defaults (defaults.elements.lineAnnotation)
+ * - annotation plugin defaults (defaults.plugins.annotation, this is what we are registering here)
+ */
+Object.keys(annotationTypes).forEach(key => {
+  chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.d.describe(`elements.${annotationTypes[key].id}`, {
+    _fallback: 'plugins.annotation.common'
+  });
+});
+
+const directUpdater = {
+  update: Object.assign
+};
+
+const hooks$1 = eventHooks.concat(elementHooks);
+const resolve = (value, optDefs) => (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.i)(optDefs) ? resolveObj(value, optDefs) : value;
+
+
+/**
+ * @typedef { import("chart.js").Chart } Chart
+ * @typedef { import("chart.js").UpdateMode } UpdateMode
+ * @typedef { import('../../types/options').AnnotationPluginOptions } AnnotationPluginOptions
+ */
+
+/**
+ * @param {string} prop
+ * @returns {boolean}
+ */
+const isIndexable = (prop) => prop === 'color' || prop === 'font';
+
+/**
+ * Resolve the annotation type, checking if is supported.
+ * @param {string} [type=line] - annotation type
+ * @returns {string} resolved annotation type
+ */
+function resolveType(type = 'line') {
+  if (annotationTypes[type]) {
+    return type;
+  }
+  console.warn(`Unknown annotation type: '${type}', defaulting to 'line'`);
+  return 'line';
+}
+
+/**
+ * @param {Chart} chart
+ * @param {Object} state
+ * @param {AnnotationPluginOptions} options
+ * @param {UpdateMode} mode
+ */
+function updateElements(chart, state, options, mode) {
+  const animations = resolveAnimations(chart, options.animations, mode);
+
+  const annotations = state.annotations;
+  const elements = resyncElements(state.elements, annotations);
+
+  for (let i = 0; i < annotations.length; i++) {
+    const annotationOptions = annotations[i];
+    const element = getOrCreateElement(elements, i, annotationOptions.type);
+    const resolver = annotationOptions.setContext(getContext(chart, element, annotationOptions));
+    const properties = element.resolveElementProperties(chart, resolver);
+
+    properties.skip = toSkip(properties);
+
+    if ('elements' in properties) {
+      updateSubElements(element, properties.elements, resolver, animations);
+      // Remove the sub-element definitions from properties, so the actual elements
+      // are not overwritten by their definitions
+      delete properties.elements;
+    }
+
+    if (!(0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.h)(element.x)) {
+      // If the element is newly created, assing the properties directly - to
+      // make them readily awailable to any scriptable options. If we do not do this,
+      // the properties retruned by `resolveElementProperties` are available only
+      // after options resolution.
+      Object.assign(element, properties);
+    }
+
+    Object.assign(element, properties.initProperties);
+    properties.options = resolveAnnotationOptions(resolver);
+
+    animations.update(element, properties);
+  }
+}
+
+function toSkip(properties) {
+  return isNaN(properties.x) || isNaN(properties.y);
+}
+
+function resolveAnimations(chart, animOpts, mode) {
+  if (mode === 'reset' || mode === 'none' || mode === 'resize') {
+    return directUpdater;
+  }
+  return new chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Animations */ .FK(chart, animOpts);
+}
+
+function updateSubElements(mainElement, elements, resolver, animations) {
+  const subElements = mainElement.elements || (mainElement.elements = []);
+  subElements.length = elements.length;
+  for (let i = 0; i < elements.length; i++) {
+    const definition = elements[i];
+    const properties = definition.properties;
+    const subElement = getOrCreateElement(subElements, i, definition.type, definition.initProperties);
+    const subResolver = resolver[definition.optionScope].override(definition);
+    properties.options = resolveAnnotationOptions(subResolver);
+    animations.update(subElement, properties);
+  }
+}
+
+function getOrCreateElement(elements, index, type, initProperties) {
+  const elementClass = annotationTypes[resolveType(type)];
+  let element = elements[index];
+  if (!element || !(element instanceof elementClass)) {
+    element = elements[index] = new elementClass();
+    Object.assign(element, initProperties);
+  }
+  return element;
+}
+
+function resolveAnnotationOptions(resolver) {
+  const elementClass = annotationTypes[resolveType(resolver.type)];
+  const result = {};
+  result.id = resolver.id;
+  result.type = resolver.type;
+  result.drawTime = resolver.drawTime;
+  Object.assign(result,
+    resolveObj(resolver, elementClass.defaults),
+    resolveObj(resolver, elementClass.defaultRoutes));
+  for (const hook of hooks$1) {
+    result[hook] = resolver[hook];
+  }
+  return result;
+}
+
+function resolveObj(resolver, defs) {
+  const result = {};
+  for (const prop of Object.keys(defs)) {
+    const optDefs = defs[prop];
+    const value = resolver[prop];
+    if (isIndexable(prop) && (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(value)) {
+      result[prop] = value.map((item) => resolve(item, optDefs));
+    } else {
+      result[prop] = resolve(value, optDefs);
+    }
+  }
+  return result;
+}
+
+function getContext(chart, element, annotation) {
+  return element.$context || (element.$context = Object.assign(Object.create(chart.getContext()), {
+    element,
+    id: annotation.id,
+    type: 'annotation'
+  }));
+}
+
+function resyncElements(elements, annotations) {
+  const count = annotations.length;
+  const start = elements.length;
+
+  if (start < count) {
+    const add = count - start;
+    elements.splice(start, 0, ...new Array(add));
+  } else if (start > count) {
+    elements.splice(count, start - count);
+  }
+  return elements;
+}
+
+var version = "3.0.1";
+
+const chartStates = new Map();
+const hooks = eventHooks.concat(elementHooks);
+
+var annotation = {
+  id: 'annotation',
+
+  version,
+
+  beforeRegister() {
+    requireVersion('chart.js', '4.0', chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Chart */ .kL.version);
+  },
+
+  afterRegister() {
+    chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Chart */ .kL.register(annotationTypes);
+  },
+
+  afterUnregister() {
+    chart_js__WEBPACK_IMPORTED_MODULE_1__/* .Chart */ .kL.unregister(annotationTypes);
+  },
+
+  beforeInit(chart) {
+    chartStates.set(chart, {
+      annotations: [],
+      elements: [],
+      visibleElements: [],
+      listeners: {},
+      listened: false,
+      moveListened: false,
+      hooks: {},
+      hooked: false,
+      hovered: []
+    });
+  },
+
+  beforeUpdate(chart, args, options) {
+    const state = chartStates.get(chart);
+    const annotations = state.annotations = [];
+
+    let annotationOptions = options.annotations;
+    if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.i)(annotationOptions)) {
+      Object.keys(annotationOptions).forEach(key => {
+        const value = annotationOptions[key];
+        if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.i)(value)) {
+          value.id = key;
+          annotations.push(value);
+        }
+      });
+    } else if ((0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.b)(annotationOptions)) {
+      annotations.push(...annotationOptions);
+    }
+    verifyScaleOptions(annotations, chart.scales);
+  },
+
+  afterDataLimits(chart, args) {
+    const state = chartStates.get(chart);
+    adjustScaleRange(chart, args.scale, state.annotations.filter(a => a.display && a.adjustScaleRange));
+  },
+
+  afterUpdate(chart, args, options) {
+    const state = chartStates.get(chart);
+    updateListeners(chart, state, options);
+    updateElements(chart, state, options, args.mode);
+    state.visibleElements = state.elements.filter(el => !el.skip && el.options.display);
+    updateHooks(chart, state, options);
+  },
+
+  beforeDatasetsDraw(chart, _args, options) {
+    draw(chart, 'beforeDatasetsDraw', options.clip);
+  },
+
+  afterDatasetsDraw(chart, _args, options) {
+    draw(chart, 'afterDatasetsDraw', options.clip);
+  },
+
+  beforeDraw(chart, _args, options) {
+    draw(chart, 'beforeDraw', options.clip);
+  },
+
+  afterDraw(chart, _args, options) {
+    draw(chart, 'afterDraw', options.clip);
+  },
+
+  beforeEvent(chart, args, options) {
+    const state = chartStates.get(chart);
+    if (handleEvent(state, args.event, options)) {
+      args.changed = true;
+    }
+  },
+
+  afterDestroy(chart) {
+    chartStates.delete(chart);
+  },
+
+  _getState(chart) {
+    return chartStates.get(chart);
+  },
+
+  defaults: {
+    animations: {
+      numbers: {
+        properties: ['x', 'y', 'x2', 'y2', 'width', 'height', 'centerX', 'centerY', 'pointX', 'pointY', 'radius'],
+        type: 'number'
+      },
+    },
+    clip: true,
+    interaction: {
+      mode: undefined,
+      axis: undefined,
+      intersect: undefined
+    },
+    common: {
+      drawTime: 'afterDatasetsDraw',
+      init: false,
+      label: {
+      }
+    }
+  },
+
+  descriptors: {
+    _indexable: false,
+    _scriptable: (prop) => !hooks.includes(prop) && prop !== 'init',
+    annotations: {
+      _allKeys: false,
+      _fallback: (prop, opts) => `elements.${annotationTypes[resolveType(opts.type)].id}`
+    },
+    interaction: {
+      _fallback: true
+    },
+    common: {
+      label: {
+        _indexable: isIndexable,
+        _fallback: true
+      },
+      _indexable: isIndexable
+    }
+  },
+
+  additionalOptionScopes: ['']
+};
+
+function draw(chart, caller, clip) {
+  const {ctx, chartArea} = chart;
+  const state = chartStates.get(chart);
+
+  if (clip) {
+    (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.Y)(ctx, chartArea);
+  }
+
+  const drawableElements = getDrawableElements(state.visibleElements, caller).sort((a, b) => a.element.options.z - b.element.options.z);
+  for (const item of drawableElements) {
+    drawElement(ctx, chartArea, state, item);
+  }
+
+  if (clip) {
+    (0,chart_js_helpers__WEBPACK_IMPORTED_MODULE_0__.$)(ctx);
+  }
+}
+
+function getDrawableElements(elements, caller) {
+  const drawableElements = [];
+  for (const el of elements) {
+    if (el.options.drawTime === caller) {
+      drawableElements.push({element: el, main: true});
+    }
+    if (el.elements && el.elements.length) {
+      for (const sub of el.elements) {
+        if (sub.options.display && sub.options.drawTime === caller) {
+          drawableElements.push({element: sub});
+        }
+      }
+    }
+  }
+  return drawableElements;
+}
+
+function drawElement(ctx, chartArea, state, item) {
+  const el = item.element;
+  if (item.main) {
+    invokeHook(state, el, 'beforeDraw');
+    el.draw(ctx, chartArea);
+    invokeHook(state, el, 'afterDraw');
+  } else {
+    el.draw(ctx, chartArea);
+  }
+}
+
+
+
+
 /***/ })
 
 /******/ 	});
@@ -17159,8 +19946,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _src_visual__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(970);
-/* provided dependency */ var window = __webpack_require__(738);
+/* harmony import */ var _src_visual__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(604);
 
 var powerbiKey = "powerbi";
 var powerbi = window[powerbiKey];
@@ -17168,7 +19954,7 @@ var rmcopD9601471EF204F488B44E6CC785CA919_DEBUG = {
     name: 'rmcopD9601471EF204F488B44E6CC785CA919_DEBUG',
     displayName: 'rmcop',
     class: 'Visual',
-    apiVersion: '5.1.0',
+    apiVersion: '5.4.0',
     create: (options) => {
         if (_src_visual__WEBPACK_IMPORTED_MODULE_0__/* .Visual */ .u) {
             return new _src_visual__WEBPACK_IMPORTED_MODULE_0__/* .Visual */ .u(options);

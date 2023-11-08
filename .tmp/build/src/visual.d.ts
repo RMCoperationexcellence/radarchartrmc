@@ -1,4 +1,5 @@
 import powerbi from "powerbi-visuals-api";
+import './../src/style.css';
 import "./../style/visual.less";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
@@ -11,7 +12,8 @@ export declare class Visual implements IVisual {
     private updateCount;
     private textNode;
     constructor(options: VisualConstructorOptions);
+    consoleupdatecount: number;
     update(options: VisualUpdateOptions): void;
-    private convertDataView;
+    convertDataView(dataView: powerbi.DataView, options: VisualUpdateOptions): any[];
     getFormattingModel(): powerbi.visuals.FormattingModel;
 }

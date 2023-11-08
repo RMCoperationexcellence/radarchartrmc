@@ -13,18 +13,19 @@
     "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "dependencies": {
-    "@types/chart.js": "^2.9.37",
-    "@types/d3": "5.7.2",
-    "chart.js": "^4.3.0",
+    "@types/chart.js": "^2.9.38",
+    "@types/d3": "7.4.1",
+    "chart.js": "^4.4.0",
+    "chartjs-plugin-annotation": "^3.0.1",
     "chartjs-plugin-datalabels": "^2.2.0",
     "d3": "^7.8.5",
-    "powerbi-visuals-api": "5.1.0",
-    "powerbi-visuals-utils-formattingmodel": "5.0.0"
+    "powerbi-visuals-api": "5.4.0",
+    "powerbi-visuals-utils-formattingmodel": "6.0.0"
   },
   "devDependencies": {
-    "ts-loader": "6.1.0",
-    "tslint": "^5.18.0",
+    "ts-loader": "9.5.0",
+    "tslint": "^5.20.1",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "3.6.3"
+    "typescript": "^5.2.2"
   }
 }

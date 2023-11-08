@@ -1,0 +1,146 @@
+SELECT COUNT(*) AS row_count
+CASE 
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1, 2, 3, 4) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (22,45)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 4 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1, 2, 3) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (51,49)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 3 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (29) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (16,18)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 1 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3,4) AND cr.is_exam_pass = 1
+    	AND  u.positionID IN (50,31,9,79,61)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 4 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (24)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 2 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (20,21,37)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 3 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3,22,27,28) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (46,41,80,78,74,62,83)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 6 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3,22,27,28) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (56)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 6 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3,4,22,27,28) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (55,60,66,67,68,69,71)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 7 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (4,14,26,29) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (25)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 4 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y'
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3,4,22,27,28) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (28) AND ufm.chainID IN (26)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 7 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y' -- Super User West
+   	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr
+    	WHERE cr.course_group_id IN (1,2,3,22,27,28) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (28) AND ufm.chainID IN (27)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 6 AND cr.exam_by_user_id = u.users_id)
+    		THEN 'Y' -- Super User North
+    			ELSE '-' 
+END AS 'หลักสูตรหลัก',
+CASE 
+	WHEN EXISTS(
+    	SELECT cr.exam_by_user_id
+    	FROM course_result cr 
+    	WHERE
+    	u.positionID IN (9,20,21,37,22,45,51,49,50,31,32,40,61,62,39,64,79,54,24,57,67,66) )
+    		THEN 'ทีมผลิต' 
+    		ELSE '-' 
+END AS 'ทีม'
+FROM
+course_result cr
+LEFT JOIN users u ON u.users_id = cr.exam_by_user_id
+LEFT JOIN UserPosition up ON up.id = u.positionID
+LEFT JOIN UserFactoryMapper ufm ON ufm.uid = u.users_id
+WHERE u.is_active = 1
+    AND u.fullname NOT LIKE '%0310%'
+    AND u.fullname NOT LIKE '%ทดสอบ%'
+    AND u.fullname NOT LIKE '%ตูน%'
+    AND up.name NOT LIKE '%center%'
+    AND u.email NOT LIKE '%pantapos%'
+    AND u.email NOT LIKE '%chakrapb%'
+    AND u.positionID NOT IN (44,-1)
+AND
+(
+		(SELECT cr.exam_by_user_id
+    	FROM course_result cr -- @@@@@@@@ 4 หลักสูตร
+    	WHERE cr.course_group_id IN (1, 2, 3, 4) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (22,45,50,31,9,79,61,82)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 4 AND cr.exam_by_user_id = u.users_id)
+    	OR
+    	(SELECT cr.exam_by_user_id
+    	FROM course_result cr  -- @@@@@@@@ 3 หลักสูตร
+    	WHERE cr.course_group_id IN (1, 2, 3) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (51,49,20,21,37)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 3 AND cr.exam_by_user_id = u.users_id)
+    	OR
+    	(SELECT cr.exam_by_user_id
+    	FROM course_result cr  -- @@@@@@@@ 3 หลักสูตร
+    	WHERE cr.course_group_id IN (1,2,3,4,22,27,28) AND cr.is_exam_pass = 1 
+    	AND  u.positionID IN (66,67,70,77)
+    	GROUP BY cr.exam_by_user_id
+    	HAVING COUNT(DISTINCT cr.course_group_id) = 7 AND cr.exam_by_user_id = u.users_id)
+ )
+ ORDER BY cr.exam_by_user_id ASC
